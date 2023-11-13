@@ -11,7 +11,7 @@ class Planner {
     #date = '';
     #limitOrderCount = 0;
     #orders = new Map();
-    #menu = new Map();
+    #menus = new Map();
     constructor(menus, limitOrderCount) {
         this.#initializeMenu(menus);
         this.#limitOrderCount = limitOrderCount;
@@ -35,13 +35,21 @@ class Planner {
         });
     }
 
+    getCategories() {
+        return Array.from(new Set(Array.from(this.#menus.values()).map((menu) => menu.type)));
+    }
+    getOrders() {
+        return this.getCategories()
+            .map((categoryName) => this.getOrdersByCategory(categoryName))
+            .flat();
+    }
     getOrdersByCategory(categoryName) {
         return Array.from(this.#orders.values()).filter((order) => order.category === categoryName);
     }
     getPreDiscountTotalPrice() {
         return Array.from(this.#orders.values()).reduce((acc, order) => {
             const key = this.#getKeyByName(order.name);
-            const menu = this.#menu.get(key);
+            const menu = this.#menus.get(key);
             return acc + menu.price * order.count;
         }, 0);
     }
@@ -68,12 +76,12 @@ class Planner {
     }
 
     #initializeMenu(menus) {
-        this.#menu = new Map(Object.entries(menus));
+        this.#menus = new Map(Object.entries(menus));
     }
 
     #isOrderOnlyOneCategory(orders, category) {
         const { orderMenuNameList } = this.#parseOrders(orders);
-        const drinkMenuNameList = Array.from(this.#menu.values())
+        const drinkMenuNameList = Array.from(this.#menus.values())
             .filter((menuMap) => menuMap.type === category)
             .map((menuMap) => menuMap.name);
 
@@ -81,7 +89,7 @@ class Planner {
     }
     #isNotIncludeMenu(orders) {
         const { orderMenuNameList } = this.#parseOrders(orders);
-        const menuNameList = Array.from(this.#menu.values()).map((menuMap) => menuMap.name);
+        const menuNameList = Array.from(this.#menus.values()).map((menuMap) => menuMap.name);
 
         orderMenuNameList.forEach((menuName) => isNotInclude(IS_INVALID_ORDER, menuName, menuNameList));
     }
@@ -126,11 +134,11 @@ class Planner {
     }
 
     #getCategoryByMenuName(menuName) {
-        return Array.from(this.#menu.values()).find((menuMap) => menuMap.name === menuName).type;
+        return Array.from(this.#menus.values()).find((menuMap) => menuMap.name === menuName).type;
     }
 
     #getKeyByName(name) {
-        return Array.from(this.#menu.keys()).find((key) => this.#menu.get(key).name === name);
+        return Array.from(this.#menus.keys()).find((key) => this.#menus.get(key).name === name);
     }
 }
 
