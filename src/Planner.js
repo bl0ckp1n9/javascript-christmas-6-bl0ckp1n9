@@ -8,10 +8,12 @@ const ERROR_MESSAGE = Object.freeze({
 const { INVALID_DATE, IS_INVALID_ORDER } = ERROR_MESSAGE;
 class Planner {
     #date = '';
-    #orders = {};
+    #limitOrderCount = 0;
+    #orders = new Map();
     #menu = new Map();
-    constructor(menus) {
+    constructor(menus, limitOrderCount) {
         this.#initializeMenu(menus);
+        this.#limitOrderCount = limitOrderCount;
     }
 
     setDate(date) {
@@ -76,7 +78,7 @@ class Planner {
     #isMoreThanMaxOrderCount(orders) {
         const { totalOrderCount } = this.#parseOrders(orders);
 
-        isMoreThanLimit(IS_INVALID_ORDER, totalOrderCount, 20);
+        isMoreThanLimit(IS_INVALID_ORDER, totalOrderCount, this.#limitOrderCount);
     }
 
     #isNotValidOrderFormat(orders) {
