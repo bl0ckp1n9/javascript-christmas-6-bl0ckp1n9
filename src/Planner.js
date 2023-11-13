@@ -11,9 +11,9 @@ class Planner {
         const validDateFormatRegExp = /^(3[01]|[12][0-9]|[1-9])$/;
         const validators = [() => isNotMatchRegex(INVALID_DATE, date, validDateFormatRegExp)];
 
-        const isNotValid = validators.some((validator) => validator());
+        validators.forEach((validator) => validator());
 
-        return !isNotValid;
+        return true;
     }
 
     static isValidOrders(orders) {
@@ -25,9 +25,10 @@ class Planner {
             () => orderList.some((order) => isNotMatchRegex(IS_INVALID_ORDER, order, validOrderFormatRegExp)),
             () => isDuplicate(IS_INVALID_ORDER, menuNameList),
         ];
-        const isNotValid = validators.some((validator) => validator());
 
-        return !isNotValid;
+        validators.forEach((validator) => validator());
+
+        return true;
     }
 
     #date = '';
