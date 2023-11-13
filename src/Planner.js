@@ -7,27 +7,27 @@ const ERROR_MESSAGE = Object.freeze({
 
 const { INVALID_DATE, IS_INVALID_ORDER } = ERROR_MESSAGE;
 class Planner {
-    static validateDate(date) {
+    static isValidDate(date) {
         const validDateFormatRegExp = /^(3[01]|[12][0-9]|[1-9])$/;
         const validators = [() => isNotMatchRegex(INVALID_DATE, date, validDateFormatRegExp)];
 
-        return validators.some((validator) => validator());
+        const isNotValid = validators.some((validator) => validator());
+
+        return !isNotValid;
     }
 
-    static validateMenu(orders) {
+    static isValidOrders(orders) {
         const orderList = orders.split(',').map((order) => order.trim());
+        const menuNameList = orderList.map((order) => order.split('-')[0]);
         const validOrderFormatRegExp = /^([가-힣\w]+)-([1-9]\d*)$/;
         const validators = [
             () => isMoreThan(IS_INVALID_ORDER, orderList.length, 20),
             () => orderList.some((order) => isNotMatchRegex(IS_INVALID_ORDER, order, validOrderFormatRegExp)),
-            () =>
-                isDuplicate(
-                    IS_INVALID_ORDER,
-                    orderList.map((order) => order.split('-')[0]),
-                ),
+            () => isDuplicate(IS_INVALID_ORDER, menuNameList),
         ];
+        const isNotValid = validators.some((validator) => validator());
 
-        return validators.some((validator) => validator());
+        return !isNotValid;
     }
 
     #date = '';
