@@ -1,5 +1,6 @@
+const PREFIX_ERROR = '[ERROR]';
 export const check = (message, validator) => {
-    if (validator()) throw new Error(`[ERROR] ${message}`);
+    if (validator()) throw new Error(`${PREFIX_ERROR} ${message}`);
 };
 
 export const isEmpty = (message, data) =>
