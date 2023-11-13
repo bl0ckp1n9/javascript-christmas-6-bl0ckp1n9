@@ -11,7 +11,7 @@ export const InputView = {
 
         return input;
     },
-    async readMenu(validate) {
+    async readOrders(validate) {
         const input = await this.readLineLoopAsync(MESSAGE.ASK_MENU, validate);
 
         return input;
