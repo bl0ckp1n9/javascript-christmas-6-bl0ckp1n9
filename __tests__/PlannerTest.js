@@ -1,14 +1,17 @@
 import Planner from '../src/Planner';
+import { MENU_LIST } from '../src/constant.js';
 
 describe('Planner 테스트', () => {
+    const planner = new Planner(MENU_LIST);
+
     describe('예약 날짜 테스트', () => {
         test('유효한 날짜', () => {
             for (let i = 1; i <= 31; i++) {
-                expect(() => Planner.isValidDate(i)).toBeTruthy();
+                expect(() => planner.isValidDate(i)).toBeTruthy();
             }
         });
         test.each([[0], [32], ['-1'], [''], ['a'], ['1a'], ['a1']])('유효하지 않은 날짜', (input) => {
-            expect(() => Planner.isValidDate(input)).toThrow();
+            expect(() => planner.isValidDate(input)).toThrow();
         });
     });
 
@@ -21,7 +24,8 @@ describe('Planner 테스트', () => {
             ['티본스테이크-10,타파스-10'],
             [' 티본스테이크-10 , 제로콜라-10 '],
         ])('주문이 유효할 때', (input) => {
-            expect(() => Planner.isValidOrders(input)).toBeTruthy();
+            console.log(input);
+            expect(() => planner.isValidOrders(input)).toBeTruthy();
         });
 
         test.each([
@@ -37,7 +41,7 @@ describe('Planner 테스트', () => {
             ['티본스테이크-15,제로콜라-6'],
             ['제로콜라-1,레드와인-2'],
         ])('주문이 유효하지 않을 때', (input) => {
-            expect(() => Planner.isValidOrders(input)).toThrow();
+            expect(() => planner.isValidOrders(input)).toThrow();
         });
     });
 });
