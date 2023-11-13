@@ -25,9 +25,9 @@ class Planner {
         const { orderMenuNameList, orderMenuCountList } = this.#parseOrders(orders);
         orderMenuNameList.forEach((menuName, index) => {
             const category = this.#getCategoryByMenuName(menuName);
-            const menuNameEn = Array.from(this.#menu.keys()).find((key) => this.#menu.get(key).name === menuName);
+            const key = this.#getKeyByName(menuName);
 
-            this.#orders.set(menuNameEn, {
+            this.#orders.set(key, {
                 name: menuName,
                 count: orderMenuCountList[index],
                 category,
@@ -37,6 +37,13 @@ class Planner {
 
     getOrdersByCategory(categoryName) {
         return Array.from(this.#orders.values()).filter((order) => order.category === categoryName);
+    }
+    getPreDiscountTotalPrice() {
+        return Array.from(this.#orders.values()).reduce((acc, order) => {
+            const key = this.#getKeyByName(order.name);
+            const menu = this.#menu.get(key);
+            return acc + menu.price * order.count;
+        }, 0);
     }
 
     isValidDate(date) {
@@ -120,6 +127,10 @@ class Planner {
 
     #getCategoryByMenuName(menuName) {
         return Array.from(this.#menu.values()).find((menuMap) => menuMap.name === menuName).type;
+    }
+
+    #getKeyByName(name) {
+        return Array.from(this.#menu.keys()).find((key) => this.#menu.get(key).name === name);
     }
 }
 
