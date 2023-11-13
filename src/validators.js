@@ -1,13 +1,18 @@
 const PREFIX_ERROR = '[ERROR]';
 
-export const check = (message, validator) => {
-    if (validator()) throw new Error(`${PREFIX_ERROR} ${message}`);
+export const check = (errorMessage, validator) => {
+    if (validator()) throw new Error(`${PREFIX_ERROR} ${errorMessage}`);
 };
 
-export const isMoreThan = (message, data, limit) => check(message, () => data > limit);
+export const isMoreThanLimit = (errorMessage, target, limit) => check(errorMessage, () => target > limit);
 
-export const isDuplicate = (message, list) => check(message, () => new Set(list).size !== list.length);
+export const isDuplicate = (errorMessage, targets) =>
+    check(errorMessage, () => new Set(targets).size !== targets.length);
 
-export const isNotMatchRegex = (message, data, regex) => check(message, () => !regex.test(data));
+export const isNotMatchRegex = (errorMessage, target, regex) => check(errorMessage, () => !regex.test(target));
 
-export const isNotInclude = (message, data, list) => check(message, () => !list.includes(data));
+export const isNotInclude = (errorMessage, target, references) =>
+    check(errorMessage, () => !references.includes(target));
+
+export const isEveryIndclude = (errorMessage, targets, references) =>
+    check(errorMessage, () => targets.every((item) => references.includes(item)));

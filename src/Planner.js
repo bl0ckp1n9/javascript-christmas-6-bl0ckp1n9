@@ -1,4 +1,4 @@
-import { check, isDuplicate, isMoreThan, isNotInclude, isNotMatchRegex } from './validators.js';
+import { check, isDuplicate, isEveryIndclude, isMoreThanLimit, isNotInclude, isNotMatchRegex } from './validators.js';
 
 const ERROR_MESSAGE = Object.freeze({
     INVALID_DATE: '유효하지 않은 날짜입니다. 다시 입력해 주세요.',
@@ -74,20 +74,13 @@ class Planner {
         return true;
     }
 
-    //  orderMenuNameList에 원소가 MENU_CATEGORY.DRAINK에 없으면 주문이 가능함 왜냐 음료만 주문일 불가능하기 때문
-
     static isValidOrders(orders) {
-        const { orderList, orderMenuNameList, totalOrderCount } = Planner.parseOrders(orders);
-        const validOrderFormatRegExp = /^([가-힣\w]+)-([1-9]\d*)$/;
         const validators = [
-            () => isMoreThan(IS_INVALID_ORDER, totalOrderCount, 20),
-            () => orderList.forEach((order) => isNotMatchRegex(IS_INVALID_ORDER, order, validOrderFormatRegExp)),
-            () => isDuplicate(IS_INVALID_ORDER, orderMenuNameList),
-            () => orderMenuNameList.forEach((menuName) => isNotInclude(IS_INVALID_ORDER, menuName, MENU_NAME_LIST)),
-            () =>
-                check(IS_INVALID_ORDER, () =>
-                    orderMenuNameList.every((menuName) => MENU_CATEGORY.DRINK.includes(menuName)),
-                ),
+            () => Planner.isMoreThanMaxOrderCount(orders),
+            () => Planner.isNotValidOrderFormat(orders),
+            () => Planner.isDuplicateOrder(orders),
+            () => Planner.isNotIncludeMenuName(orders),
+            () => Planner.isOnlyDrink(orders),
         ];
 
         validators.forEach((validator) => validator());
@@ -107,6 +100,37 @@ class Planner {
             orderMenuCountList,
             totalOrderCount,
         };
+    }
+
+    static isMoreThanMaxOrderCount(orders) {
+        const { totalOrderCount } = Planner.parseOrders(orders);
+
+        isMoreThanLimit(IS_INVALID_ORDER, totalOrderCount, 20);
+    }
+
+    static isNotValidOrderFormat(orders) {
+        const { orderList } = Planner.parseOrders(orders);
+        const validOrderFormatRegExp = /^([가-힣\w]+)-([1-9]\d*)$/;
+
+        orderList.forEach((order) => isNotMatchRegex(IS_INVALID_ORDER, order, validOrderFormatRegExp));
+    }
+
+    static isDuplicateOrder(orders) {
+        const { orderMenuNameList } = Planner.parseOrders(orders);
+
+        isDuplicate(IS_INVALID_ORDER, orderMenuNameList);
+    }
+
+    static isNotIncludeMenuName(orders) {
+        const { orderMenuNameList } = Planner.parseOrders(orders);
+
+        orderMenuNameList.forEach((menuName) => isNotInclude(IS_INVALID_ORDER, menuName, MENU_NAME_LIST));
+    }
+
+    static isOnlyDrink(orders) {
+        const { orderMenuNameList } = Planner.parseOrders(orders);
+
+        isEveryIndclude(IS_INVALID_ORDER, orderMenuNameList, MENU_CATEGORY.DRINK);
     }
 
     #date = '';
