@@ -1,86 +1,41 @@
-import { check, isDuplicate, isEveryIndclude, isMoreThanLimit, isNotInclude, isNotMatchRegex } from './validators.js';
+import { isDuplicate, isEveryIndclude, isMoreThanLimit, isNotInclude, isNotMatchRegex } from './validators.js';
 
 const ERROR_MESSAGE = Object.freeze({
     INVALID_DATE: '유효하지 않은 날짜입니다. 다시 입력해 주세요.',
     IS_INVALID_ORDER: '유효하지 않은 주문입니다. 다시 입력해 주세요.',
 });
 
-export const MENU_LIST = {
-    COKE_ZERO: {
-        name: '제로콜라',
-        price: 3_000,
-    },
-    RED_WINE: {
-        name: '레드와인',
-        price: 6_000,
-    },
-    CHAMPAGNE: {
-        name: '샴페인',
-        price: 25_000,
-    },
-    CHOCOLATE_CAKE: {
-        name: '초코케이크',
-        price: 15_000,
-    },
-    ICE_CREAM: {
-        name: '아이스크림',
-        price: 5_000,
-    },
-    T_BONE_STEAK: {
-        name: '티본스테이크',
-        price: 55_000,
-    },
-    BARBECUE_RIB: {
-        name: '바비큐립',
-        price: 54_000,
-    },
-    SEAFOOD_PASTA: {
-        name: '해산물파스타',
-        price: 35_000,
-    },
-    CHRISTMAS_PASTA: {
-        name: '크리스마스파스타',
-        price: 25_000,
-    },
-    MUSHROOM_SOUP: {
-        name: '양송이수프',
-        price: 6_000,
-    },
-    TAPAS: {
-        name: '타파스',
-        price: 5_500,
-    },
-    CAESAR_SALAD: {
-        name: '시저샐러드',
-        price: 8_000,
-    },
-};
-export const MENU_CATEGORY = Object.freeze({
-    DRINK: [MENU_LIST.COKE_ZERO.name, MENU_LIST.RED_WINE.name, MENU_LIST.CHAMPAGNE.name],
-    DESSERT: [MENU_LIST.CHOCOLATE_CAKE, MENU_LIST.ICE_CREAM],
-    MAIN_DISH: [MENU_LIST.T_BONE_STEAK, MENU_LIST.BARBECUE_RIB, MENU_LIST.SEAFOOD_PASTA, MENU_LIST.CHRISTMAS_PASTA],
-    APPETIZER: [MENU_LIST.MUSHROOM_SOUP, MENU_LIST.TAPAS, MENU_LIST.CAESAR_SALAD],
-});
-export const MENU_NAME_LIST = Object.values(MENU_LIST).map((menu) => menu.name);
-
 const { INVALID_DATE, IS_INVALID_ORDER } = ERROR_MESSAGE;
 class Planner {
-    static isValidDate(date) {
-        const validDateFormatRegExp = /^(3[01]|[12][0-9]|[1-9])$/;
-        const validators = [() => isNotMatchRegex(INVALID_DATE, date, validDateFormatRegExp)];
+    #date = '';
+    #orders = {};
+    #menu = new Map();
+    constructor(menus) {
+        this.#initializeMenu(menus);
+    }
+
+    setDate(date) {
+        this.#date = date;
+    }
+
+    getDate() {
+        return this.#date;
+    }
+
+    isValidDate(date) {
+        const validators = [() => this.#isNotValidDateFormat(date)];
 
         validators.forEach((validator) => validator());
 
         return true;
     }
-
-    static isValidOrders(orders) {
+    isValidOrders(orders) {
         const validators = [
-            () => Planner.isMoreThanMaxOrderCount(orders),
-            () => Planner.isNotValidOrderFormat(orders),
-            () => Planner.isDuplicateOrder(orders),
-            () => Planner.isNotIncludeMenuName(orders),
-            () => Planner.isOnlyDrink(orders),
+            () => this.#isMoreThanMaxOrderCount(orders),
+            () => this.#isNotValidOrderFormat(orders),
+            () => this.#isDuplicateOrder(orders),
+            () => this.#isNotIncludeMenu(orders),
+            () => this.#isOnlyDrink(orders),
         ];
 
         validators.forEach((validator) => validator());
@@ -88,7 +43,55 @@ class Planner {
         return true;
     }
 
-    static parseOrders(orders) {
+    #initializeMenu(menus) {
+        Object.entries(menus).forEach(([category, categoryMenus]) => {
+            this.#menu.set(category, new Map());
+            Object.entries(categoryMenus).forEach(([menuName, { name, price }]) => {
+                this.#menu.get(category).set(menuName, { name, price });
+            });
+        });
+    }
+
+    #isOnlyDrink(orders) {
+        const { orderMenuNameList } = this.#parseOrders(orders);
+        const drinkMenuNameList = Array.from(this.#menu.get('DRINK').values()).map((menu) => menu.name);
+
+        isEveryIndclude(IS_INVALID_ORDER, orderMenuNameList, drinkMenuNameList);
+    }
+    #isNotIncludeMenu(orders) {
+        const { orderMenuNameList } = this.#parseOrders(orders);
+        const menuNameList = Array.from(this.#menu.values())
+            .map((menuMap) => Array.from(menuMap.values()).map((menu) => menu.name))
+            .flat();
+
+        orderMenuNameList.forEach((menuName) => isNotInclude(IS_INVALID_ORDER, menuName, menuNameList));
+    }
+
+    #isDuplicateOrder(orders) {
+        const { orderMenuNameList } = this.#parseOrders(orders);
+
+        isDuplicate(IS_INVALID_ORDER, orderMenuNameList);
+    }
+
+    #isMoreThanMaxOrderCount(orders) {
+        const { totalOrderCount } = this.#parseOrders(orders);
+
+        isMoreThanLimit(IS_INVALID_ORDER, totalOrderCount, 20);
+    }
+
+    #isNotValidOrderFormat(orders) {
+        const { orderList } = this.#parseOrders(orders);
+        const validOrderFormatRegExp = /^([가-힣\w]+)-([1-9]\d*)$/;
+
+        orderList.forEach((order) => isNotMatchRegex(IS_INVALID_ORDER, order, validOrderFormatRegExp));
+    }
+
+    #isNotValidDateFormat(date) {
+        const validDateFormatRegExp = /^(3[01]|[12][0-9]|[1-9])$/;
+        isNotMatchRegex(INVALID_DATE, date, validDateFormatRegExp);
+    }
+
+    #parseOrders(orders) {
         const orderList = orders.split(',').map((order) => order.trim());
         const orderMenuNameList = orderList.map((order) => order.split('-')[0]);
         const orderMenuCountList = orderList.map((order) => order.split('-')[1]);
@@ -100,46 +103,6 @@ class Planner {
             orderMenuCountList,
             totalOrderCount,
         };
-    }
-
-    static isMoreThanMaxOrderCount(orders) {
-        const { totalOrderCount } = Planner.parseOrders(orders);
-
-        isMoreThanLimit(IS_INVALID_ORDER, totalOrderCount, 20);
-    }
-
-    static isNotValidOrderFormat(orders) {
-        const { orderList } = Planner.parseOrders(orders);
-        const validOrderFormatRegExp = /^([가-힣\w]+)-([1-9]\d*)$/;
-
-        orderList.forEach((order) => isNotMatchRegex(IS_INVALID_ORDER, order, validOrderFormatRegExp));
-    }
-
-    static isDuplicateOrder(orders) {
-        const { orderMenuNameList } = Planner.parseOrders(orders);
-
-        isDuplicate(IS_INVALID_ORDER, orderMenuNameList);
-    }
-
-    static isNotIncludeMenuName(orders) {
-        const { orderMenuNameList } = Planner.parseOrders(orders);
-
-        orderMenuNameList.forEach((menuName) => isNotInclude(IS_INVALID_ORDER, menuName, MENU_NAME_LIST));
-    }
-
-    static isOnlyDrink(orders) {
-        const { orderMenuNameList } = Planner.parseOrders(orders);
-
-        isEveryIndclude(IS_INVALID_ORDER, orderMenuNameList, MENU_CATEGORY.DRINK);
-    }
-
-    #date = '';
-
-    setDate(date) {
-        this.#date = date;
-    }
-    getDate() {
-        return this.#date;
     }
 }
 
