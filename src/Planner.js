@@ -24,15 +24,19 @@ class Planner {
     setOrders(orders) {
         const { orderMenuNameList, orderMenuCountList } = this.#parseOrders(orders);
         orderMenuNameList.forEach((menuName, index) => {
-            const categoryName = this.#getCategoryByMenuName(menuName);
-            const menu = new Map();
-            menu.set(menuName, orderMenuCountList[index]);
-            this.#orders.set(categoryName, menu);
+            const category = this.#getCategoryByMenuName(menuName);
+            const menuNameEn = Array.from(this.#menu.keys()).find((key) => this.#menu.get(key).name === menuName);
+
+            this.#orders.set(menuNameEn, {
+                name: menuName,
+                count: orderMenuCountList[index],
+                category,
+            });
         });
     }
 
     getOrdersByCategory(categoryName) {
-        return this.#orders.get(categoryName);
+        return Array.from(this.#orders.values()).filter((order) => order.category === categoryName);
     }
 
     isValidDate(date) {
@@ -48,7 +52,7 @@ class Planner {
             () => this.#isNotValidOrderFormat(orders),
             () => this.#isDuplicateOrder(orders),
             () => this.#isNotIncludeMenu(orders),
-            () => this.#isOnlyDrink(orders),
+            () => this.#isOrderOnlyOneCategory(orders, CATEGORIES.BEVERAGE),
         ];
 
         validators.forEach((validator) => validator());
@@ -60,10 +64,10 @@ class Planner {
         this.#menu = new Map(Object.entries(menus));
     }
 
-    #isOnlyDrink(orders) {
+    #isOrderOnlyOneCategory(orders, category) {
         const { orderMenuNameList } = this.#parseOrders(orders);
         const drinkMenuNameList = Array.from(this.#menu.values())
-            .filter((menuMap) => menuMap.type === CATEGORIES.BEVERAGE)
+            .filter((menuMap) => menuMap.type === category)
             .map((menuMap) => menuMap.name);
 
         isEveryIndclude(IS_INVALID_ORDER, orderMenuNameList, drinkMenuNameList);
@@ -96,6 +100,7 @@ class Planner {
 
     #isNotValidDateFormat(date) {
         const validDateFormatRegExp = /^(3[01]|[12][0-9]|[1-9])$/;
+
         isNotMatchRegex(INVALID_DATE, date, validDateFormatRegExp);
     }
 
