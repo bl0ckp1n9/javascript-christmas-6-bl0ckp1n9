@@ -1,4 +1,5 @@
 import { isDuplicate, isEveryIndclude, isMoreThanLimit, isNotInclude, isNotMatchRegex } from './validators.js';
+import { CATEGORIES } from './constant.js';
 
 const ERROR_MESSAGE = Object.freeze({
     INVALID_DATE: '유효하지 않은 날짜입니다. 다시 입력해 주세요.',
@@ -20,8 +21,18 @@ class Planner {
         this.#date = date;
     }
 
-    getDate() {
-        return this.#date;
+    setOrders(orders) {
+        const { orderMenuNameList, orderMenuCountList } = this.#parseOrders(orders);
+        orderMenuNameList.forEach((menuName, index) => {
+            const categoryName = this.#getCategoryByMenuName(menuName);
+            const menu = new Map();
+            menu.set(menuName, orderMenuCountList[index]);
+            this.#orders.set(categoryName, menu);
+        });
+    }
+
+    getOrdersByCategory(categoryName) {
+        return this.#orders.get(categoryName);
     }
 
     isValidDate(date) {
@@ -46,25 +57,20 @@ class Planner {
     }
 
     #initializeMenu(menus) {
-        Object.entries(menus).forEach(([category, categoryMenus]) => {
-            this.#menu.set(category, new Map());
-            Object.entries(categoryMenus).forEach(([menuName, { name, price }]) => {
-                this.#menu.get(category).set(menuName, { name, price });
-            });
-        });
+        this.#menu = new Map(Object.entries(menus));
     }
 
     #isOnlyDrink(orders) {
         const { orderMenuNameList } = this.#parseOrders(orders);
-        const drinkMenuNameList = Array.from(this.#menu.get('DRINK').values()).map((menu) => menu.name);
+        const drinkMenuNameList = Array.from(this.#menu.values())
+            .filter((menuMap) => menuMap.type === CATEGORIES.BEVERAGE)
+            .map((menuMap) => menuMap.name);
 
         isEveryIndclude(IS_INVALID_ORDER, orderMenuNameList, drinkMenuNameList);
     }
     #isNotIncludeMenu(orders) {
         const { orderMenuNameList } = this.#parseOrders(orders);
-        const menuNameList = Array.from(this.#menu.values())
-            .map((menuMap) => Array.from(menuMap.values()).map((menu) => menu.name))
-            .flat();
+        const menuNameList = Array.from(this.#menu.values()).map((menuMap) => menuMap.name);
 
         orderMenuNameList.forEach((menuName) => isNotInclude(IS_INVALID_ORDER, menuName, menuNameList));
     }
@@ -105,6 +111,10 @@ class Planner {
             orderMenuCountList,
             totalOrderCount,
         };
+    }
+
+    #getCategoryByMenuName(menuName) {
+        return Array.from(this.#menu.values()).find((menuMap) => menuMap.name === menuName).type;
     }
 }
 
