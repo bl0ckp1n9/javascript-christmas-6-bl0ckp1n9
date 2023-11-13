@@ -1,4 +1,4 @@
-import { isDuplicate, isMoreThan, isNotInclude, isNotMatchRegex } from './validators.js';
+import { check, isDuplicate, isMoreThan, isNotInclude, isNotMatchRegex } from './validators.js';
 
 const ERROR_MESSAGE = Object.freeze({
     INVALID_DATE: '유효하지 않은 날짜입니다. 다시 입력해 주세요.',
@@ -55,6 +55,12 @@ export const MENU_LIST = {
         price: 8_000,
     },
 };
+export const MENU_CATEGORY = Object.freeze({
+    DRINK: [MENU_LIST.COKE_ZERO.name, MENU_LIST.RED_WINE.name, MENU_LIST.CHAMPAGNE.name],
+    DESSERT: [MENU_LIST.CHOCOLATE_CAKE, MENU_LIST.ICE_CREAM],
+    MAIN_DISH: [MENU_LIST.T_BONE_STEAK, MENU_LIST.BARBECUE_RIB, MENU_LIST.SEAFOOD_PASTA, MENU_LIST.CHRISTMAS_PASTA],
+    APPETIZER: [MENU_LIST.MUSHROOM_SOUP, MENU_LIST.TAPAS, MENU_LIST.CAESAR_SALAD],
+});
 export const MENU_NAME_LIST = Object.values(MENU_LIST).map((menu) => menu.name);
 
 const { INVALID_DATE, IS_INVALID_ORDER } = ERROR_MESSAGE;
@@ -68,22 +74,39 @@ class Planner {
         return true;
     }
 
+    //  orderMenuNameList에 원소가 MENU_CATEGORY.DRAINK에 없으면 주문이 가능함 왜냐 음료만 주문일 불가능하기 때문
+
     static isValidOrders(orders) {
-        const orderList = orders.split(',').map((order) => order.trim());
-        const orderMenuNameList = orderList.map((order) => order.split('-')[0]);
-        const orderMenuCountList = orderList.map((order) => order.split('-')[1]);
-        const totalOrderCount = orderMenuCountList.reduce((acc, cur) => acc + Number(cur), 0);
+        const { orderList, orderMenuNameList, totalOrderCount } = Planner.parseOrders(orders);
         const validOrderFormatRegExp = /^([가-힣\w]+)-([1-9]\d*)$/;
         const validators = [
             () => isMoreThan(IS_INVALID_ORDER, totalOrderCount, 20),
             () => orderList.forEach((order) => isNotMatchRegex(IS_INVALID_ORDER, order, validOrderFormatRegExp)),
             () => isDuplicate(IS_INVALID_ORDER, orderMenuNameList),
             () => orderMenuNameList.forEach((menuName) => isNotInclude(IS_INVALID_ORDER, menuName, MENU_NAME_LIST)),
+            () =>
+                check(IS_INVALID_ORDER, () =>
+                    orderMenuNameList.every((menuName) => MENU_CATEGORY.DRINK.includes(menuName)),
+                ),
         ];
 
         validators.forEach((validator) => validator());
 
         return true;
+    }
+
+    static parseOrders(orders) {
+        const orderList = orders.split(',').map((order) => order.trim());
+        const orderMenuNameList = orderList.map((order) => order.split('-')[0]);
+        const orderMenuCountList = orderList.map((order) => order.split('-')[1]);
+        const totalOrderCount = orderMenuCountList.reduce((acc, cur) => acc + Number(cur), 0);
+
+        return {
+            orderList,
+            orderMenuNameList,
+            orderMenuCountList,
+            totalOrderCount,
+        };
     }
 
     #date = '';
