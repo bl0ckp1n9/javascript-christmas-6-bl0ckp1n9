@@ -9,7 +9,7 @@
   "extends": ["airbnb-base", "prettier"],
   "rules": {
     "max-depth" : ["error", 2],
-    "max-lines-per-function" : ["error", 15],
+    "max-lines-per-function" : ["error", {"max": 15, "skipBlankLines": true, "skipComments": true}],
     "indent": ["error", 4],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
@@ -17,7 +17,15 @@
     "no-console": "warn",
     "no-dupe-args": "error",
     "no-unreachable": "error",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "lines-between-class-members": "off",
+    "import/extensions": "off",
+    "import/no-named-as-default": "off",
+    "no-await-in-loop": "off"
   },
-  "plugins": ["import"]
+  "plugins": ["import"],
+  "ignorePatterns": [
+    "node_modules/",
+    "__tests__/"
+  ]
 }
