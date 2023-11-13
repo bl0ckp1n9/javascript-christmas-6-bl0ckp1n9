@@ -9,10 +9,20 @@ const MESSAGE = {
 
 export const InputView = {
     async readDate() {
-        const input = await Console.readLineAsync(MESSAGE.ASK_DATE);
+        const input = await this.readLineTrimAsync(MESSAGE.ASK_DATE);
+
+        return input.trim();
     },
     async readMenu() {
-        const input = await Console.readLineAsync(MESSAGE.ASK_MENU);
+        const input = await this.readLineTrimAsync(MESSAGE.ASK_MENU);
+
+        return input.trim();
+    },
+
+    async readLineTrimAsync(message) {
+        const input = await Console.readLineAsync(message);
+
+        return input.trim();
     },
 };
 
