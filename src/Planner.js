@@ -5,7 +5,7 @@ const ERROR_MESSAGE = Object.freeze({
     IS_INVALID_ORDER: '유효하지 않은 주문입니다. 다시 입력해 주세요.',
 });
 
-const MENU_LIST = {
+export const MENU_LIST = {
     COKE_ZERO: {
         name: '제로콜라',
         price: 3_000,
@@ -55,7 +55,7 @@ const MENU_LIST = {
         price: 8_000,
     },
 };
-const MENU_NAME_LIST = Object.values(MENU_LIST).map((menu) => menu.name);
+export const MENU_NAME_LIST = Object.values(MENU_LIST).map((menu) => menu.name);
 
 const { INVALID_DATE, IS_INVALID_ORDER } = ERROR_MESSAGE;
 class Planner {
@@ -71,13 +71,16 @@ class Planner {
     static isValidOrders(orders) {
         const orderList = orders.split(',').map((order) => order.trim());
         const orderMenuNameList = orderList.map((order) => order.split('-')[0]);
+        const orderMenuCountList = orderList.map((order) => order.split('-')[1]);
+        const totalOrderCount = orderMenuCountList.reduce((acc, cur) => acc + Number(cur), 0);
         const validOrderFormatRegExp = /^([가-힣\w]+)-([1-9]\d*)$/;
         const validators = [
-            () => isMoreThan(IS_INVALID_ORDER, orderList.length, 20),
+            () => isMoreThan(IS_INVALID_ORDER, totalOrderCount, 20),
             () => orderList.forEach((order) => isNotMatchRegex(IS_INVALID_ORDER, order, validOrderFormatRegExp)),
             () => isDuplicate(IS_INVALID_ORDER, orderMenuNameList),
             () => orderMenuNameList.forEach((menuName) => isNotInclude(IS_INVALID_ORDER, menuName, MENU_NAME_LIST)),
         ];
+
         validators.forEach((validator) => validator());
 
         return true;
