@@ -7,6 +7,22 @@ const OutputView = {
             Console.print(`${order.name} ${order.count}개`);
         });
     },
+    printTotalPrice(totalPrice) {
+        Console.print('<할인 전 총주문 금액>');
+        Console.print(`${totalPrice}원`);
+    },
+    printEventBenefits(event) {
+        Console.print('<혜택 내역>');
+    },
+    printBadge(badge) {
+        Console.print('<12월 이벤트 배지>');
+    },
+    printTotalPriceWithDiscount(totalPriceWithDiscount) {
+        Console.print('<할인 후 예상 결제 금액>');
+    },
+    printGiveWayMenu(giveWay) {
+        Console.print('<증정 메뉴>');
+    },
 };
 
 export default OutputView;
