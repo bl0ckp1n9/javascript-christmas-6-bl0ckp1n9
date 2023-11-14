@@ -73,3 +73,76 @@ export const REGEX = {
     DAY_FORMAT: /^(3[01]|[12][0-9]|[1-9])$/,
     ORDER_FORMAT: /^([가-힣\w]+)-([1-9]\d*)$/,
 };
+
+export const DAYS = {
+    SUN: 0,
+    MON: 1,
+    TUE: 2,
+    WED: 3,
+    THU: 4,
+    FRI: 5,
+    SAT: 6,
+};
+
+export const MONTHS = {
+    JAN: 1,
+    FEB: 2,
+    MAR: 3,
+    APR: 4,
+    MAY: 5,
+    JUN: 6,
+    JUL: 7,
+    AUG: 8,
+    SEP: 9,
+    OCT: 10,
+    NOV: 11,
+    DEC: 12,
+};
+
+export const PROMOTION_CONFIG = {
+    CHRISTMAS: {
+        NAME: '크리스마스 디데이',
+        TYPE: 'CHRISTMAS',
+        BENEFIT_PRICE: 1_000,
+        MINIMUM_PRICE: 0,
+        END_DATE: 25,
+        GIFT: 'DISCOUNT',
+        SPECIAL_DATE: [],
+    },
+    WEEKENDS: {
+        NAME: '주말',
+        TYPE: 'WEEKENDS',
+        BENEFIT_PRICE: 2_023,
+        MINIMUM_PRICE: 0,
+        END_DATE: 31,
+        GIFT: 'DISCOUNT',
+        SPECIAL_DATE: [],
+    },
+    WEEKDAYS: {
+        NAME: '평일',
+        TYPE: 'WEEKDAYS',
+        BENEFIT_PRICE: 2_023,
+        MINIMUM_PRICE: 0,
+        END_DATE: 31,
+        GIFT: 'DISCOUNT',
+        SPECIAL_DATE: [],
+    },
+    SPECIAL: {
+        NAME: '특별',
+        TYPE: 'SPECIAL',
+        BENEFIT_PRICE: 2_023,
+        MINIMUM_PRICE: 0,
+        END_DATE: 31,
+        GIFT: 'DISCOUNT',
+        SPECIAL_DATE: [3, 10, 17, 24, 25, 31],
+    },
+    GIFT: {
+        NAME: '증정',
+        TYPE: 'GIFT',
+        BENEFIT_PRICE: 25_000,
+        MINIMUM_PRICE: 120_000,
+        END_DATE: 31,
+        GIFT: '샴페인',
+        SPECIAL_DATE: [],
+    },
+};
