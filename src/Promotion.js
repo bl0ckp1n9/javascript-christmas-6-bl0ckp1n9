@@ -16,7 +16,7 @@ export const WeekendsPromotion = {
     },
 };
 export const WeekdaysPromotion = {
-    CONFIG: PROMOTION_CONFIG.WEEKENDS,
+    CONFIG: PROMOTION_CONFIG.WEEKDAYS,
     getPromotionPrice(orders) {
         const menuCount = orders.reduce((acc, cur) => acc + Number(cur.count), 0);
         return this.BENEFIT_PRICE * menuCount;
@@ -26,7 +26,7 @@ export const WeekdaysPromotion = {
 export const SpecialPromotion = {
     CONFIG: PROMOTION_CONFIG.SPECIAL,
     getPromotionPrice(date) {
-        if (!this.SPECIAL_DATE.includes(date)) return 0;
+        if (!this.CONFIG.SPECIAL_DATES.includes(date)) return 0;
         return this.BENEFIT_PRICE;
     },
 };
@@ -38,4 +38,4 @@ export const GiftPromotion = {
         return this.BENEFIT_PRICE;
     },
 };
-export const PromotionList = [ChristPromotion, WeekendsPromotion, SpecialPromotion, GiftPromotion];
+export const Promotions = [ChristPromotion, WeekendsPromotion, WeekdaysPromotion, SpecialPromotion, GiftPromotion];

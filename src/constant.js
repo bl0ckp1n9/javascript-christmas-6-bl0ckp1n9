@@ -1,3 +1,5 @@
+import { fillArrayToDates, getWeekdaysDates, getWeekendsDates } from './utils.js';
+
 export const CATEGORIES = {
     BEVERAGE: 'BEVERAGE',
     DESSERT: 'DESSERT',
@@ -99,50 +101,48 @@ export const MONTHS = {
     DEC: 12,
 };
 
+const PROMOTION_YEAR = 2023;
+const PROMOTION_MONTH = MONTHS.DEC;
+
 export const PROMOTION_CONFIG = {
     CHRISTMAS: {
         NAME: '크리스마스 디데이',
         TYPE: 'CHRISTMAS',
         BENEFIT_PRICE: 1_000,
         MINIMUM_PRICE: 0,
-        END_DATE: 25,
         GIFT: 'DISCOUNT',
-        SPECIAL_DATE: [],
+        SPECIAL_DATES: fillArrayToDates(25),
     },
     WEEKENDS: {
         NAME: '주말',
         TYPE: 'WEEKENDS',
         BENEFIT_PRICE: 2_023,
         MINIMUM_PRICE: 0,
-        END_DATE: 31,
         GIFT: 'DISCOUNT',
-        SPECIAL_DATE: [],
+        SPECIAL_DATES: getWeekendsDates(PROMOTION_YEAR, PROMOTION_MONTH),
     },
     WEEKDAYS: {
         NAME: '평일',
         TYPE: 'WEEKDAYS',
         BENEFIT_PRICE: 2_023,
         MINIMUM_PRICE: 0,
-        END_DATE: 31,
         GIFT: 'DISCOUNT',
-        SPECIAL_DATE: [],
+        SPECIAL_DATES: getWeekdaysDates(PROMOTION_YEAR, PROMOTION_MONTH),
     },
     SPECIAL: {
         NAME: '특별',
         TYPE: 'SPECIAL',
         BENEFIT_PRICE: 2_023,
         MINIMUM_PRICE: 0,
-        END_DATE: 31,
         GIFT: 'DISCOUNT',
-        SPECIAL_DATE: [3, 10, 17, 24, 25, 31],
+        SPECIAL_DATES: [3, 10, 17, 24, 25, 31],
     },
     GIFT: {
         NAME: '증정',
         TYPE: 'GIFT',
         BENEFIT_PRICE: 25_000,
         MINIMUM_PRICE: 120_000,
-        END_DATE: 31,
         GIFT: '샴페인',
-        SPECIAL_DATE: [],
+        SPECIAL_DATES: fillArrayToDates(31),
     },
 };
