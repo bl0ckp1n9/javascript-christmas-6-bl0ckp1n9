@@ -13,32 +13,32 @@ class Planner {
             .filter((menu) => menu.type === category)
             .map((menu) => menu.name);
 
-        isEveryInclude('b', orderMenuNameList, menuNameListForCategory);
+        isEveryInclude(IS_INVALID_ORDER, orderMenuNameList, menuNameListForCategory);
     }
 
     static validateIncludeMenu(orders, menus) {
         const { orderMenuNameList } = Planner.parseOrders(orders);
         const menuNameList = Object.values(menus).map((menu) => menu.name);
 
-        isSomeNotInclude('a', orderMenuNameList, menuNameList);
+        isSomeNotInclude(IS_INVALID_ORDER, orderMenuNameList, menuNameList);
     }
 
     static validateDuplicationOrder(orders) {
         const { orderMenuNameList } = Planner.parseOrders(orders);
 
-        isDuplicate('c', orderMenuNameList);
+        isDuplicate(IS_INVALID_ORDER, orderMenuNameList);
     }
 
     static validateLimitOrderCount(orders, limitOrderCount) {
         const { totalOrderCount } = Planner.parseOrders(orders);
 
-        isMoreThanLimit('d', totalOrderCount, limitOrderCount);
+        isMoreThanLimit(IS_INVALID_ORDER, totalOrderCount, limitOrderCount);
     }
 
     static validateOrderFormat(orders, regex) {
         const { orderList } = Planner.parseOrders(orders);
 
-        orderList.forEach((order) => isNotMatchRegex('e', order, regex));
+        orderList.forEach((order) => isNotMatchRegex(IS_INVALID_ORDER, order, regex));
     }
 
     static validateDayFormat(date, regex) {
@@ -106,18 +106,6 @@ class Planner {
     validate(validators) {
         validators.forEach((validator) => validator());
     }
-
-    getChristmasDdayDiscountPrice() {
-        const baseDiscountPrice = 1_000;
-        const increasePrice = 100;
-
-        return baseDiscountPrice + increasePrice * (Number(this.#date) - 1);
-    }
-
-    applyWeekdaysEvent() {}
-    applyWeekendEvent() {}
-
-    applyGiftEvent() {}
 
     #getCategoryByMenuName(menuName) {
         return Array.from(this.#menus.values()).find((menuMap) => menuMap.name === menuName).type;
