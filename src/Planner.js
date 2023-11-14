@@ -1,4 +1,5 @@
 import { PROMOTION_CATEGORIES } from './constant.js';
+import PromotionFactory from './Promotion.js';
 
 class Planner {
     #order;
@@ -8,6 +9,7 @@ class Planner {
         this.#order = order;
         this.#calendar = calendar;
     }
+
     getPromotionsByOrderDate() {
         const promotions = this.#calendar.getPromotionsByDate(this.#order.getOrderDate());
         const activePromotions = [];
@@ -16,7 +18,7 @@ class Planner {
             const productInOrders = this.#order.getOrderMenuByCategory(CONFIG.PRODUCT);
             activePromotions.push({
                 ...CONFIG,
-                promotionBenefitPrice: this.#calculatePromotions(promotion, productInOrders),
+                promotionBenefitPrice: this.#applyPromotions(promotion, productInOrders),
             });
         });
         return activePromotions;
@@ -39,20 +41,10 @@ class Planner {
         if (totalBenefitPrice >= 5_000) return '벨';
         return '없음';
     }
-    #calculatePromotions(promotion) {
-        const promotionCategory = promotion.CONFIG.EVENT;
-        if (promotionCategory === PROMOTION_CATEGORIES.CHRISTMAS || promotionCategory === PROMOTION_CATEGORIES.SPECIAL)
-            return promotion.getPromotionPrice(this.#order.getOrderDate());
-        if (
-            promotionCategory === PROMOTION_CATEGORIES.WEEKENDS ||
-            promotionCategory === PROMOTION_CATEGORIES.WEEKDAYS
-        ) {
-            const productInOrders = this.#order.getOrderMenuByCategory(promotion.CONFIG.PRODUCT);
-            return promotion.getPromotionPrice(productInOrders);
-        }
-        if (promotionCategory === PROMOTION_CATEGORIES.GIFT)
-            return promotion.getPromotionPrice(this.#order.getTotalPrice());
-        return 0;
+    #applyPromotions(promotion) {
+        const totalPriceWithoutDiscount = this.#order.getTotalPrice();
+        if (totalPriceWithoutDiscount < 1_0000) return 0;
+        return PromotionFactory.calculatePromotionPrice(promotion, this.#order);
     }
 }
 

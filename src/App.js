@@ -4,9 +4,9 @@ import OutputView from './OutputView.js';
 import Planner from './Planner.js';
 import Order from './Order.js';
 import PromotionCalendar from './PromotionCalendar.js';
-import { Promotions } from './Promotion.js';
+import PromotionFactory from './Promotion.js';
 
-import { MENUS, PROMOTION_MONTH, PROMOTION_YEAR } from './constant.js';
+import { MENUS, PROMOTION_CATEGORIES, PROMOTION_MONTH, PROMOTION_YEAR } from './constant.js';
 
 class App {
     #planner;
@@ -20,7 +20,10 @@ class App {
         const orderDate = await InputView.readOrderDate((input) => Order.validateDate(input));
         const order = await InputView.readOrderMenus((input) => Order.validateOrder(input));
         this.#orders = new Order(MENUS, order, orderDate);
-        this.#planner = new Planner(this.#orders, new PromotionCalendar(PROMOTION_YEAR, PROMOTION_MONTH, Promotions));
+        this.#planner = new Planner(
+            this.#orders,
+            new PromotionCalendar(PROMOTION_YEAR, PROMOTION_MONTH, PromotionFactory.promotionList),
+        );
     }
 
     async preview() {
