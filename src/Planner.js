@@ -22,7 +22,12 @@ class Planner {
         });
         return activePromotions;
     }
-    #calculatePromotions(promotion, orders) {
+
+    getTotalBenefitPrice() {
+        const promotions = this.getPromotionsByOrderDate();
+        return promotions.reduce((acc, cur) => acc + cur.promotionBenefitPrice, 0);
+    }
+    #calculatePromotions(promotion) {
         const promotionCategory = promotion.CONFIG.EVENT;
         if (promotionCategory === PROMOTION_CATEGORIES.CHRISTMAS || promotionCategory === PROMOTION_CATEGORIES.SPECIAL)
             return promotion.getPromotionPrice(this.#order.getOrderDate());

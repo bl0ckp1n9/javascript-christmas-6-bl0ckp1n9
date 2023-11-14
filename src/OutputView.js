@@ -37,6 +37,10 @@ const OutputView = {
         Console.print('<증정 메뉴>');
         Console.print(isApplied ? `${PRODUCT.NAME} 1개` : '없음');
     },
+    printTotalBenefitPrice(totalBenefitPrice) {
+        Console.print('<총 혜택 금액>');
+        Console.print(`${totalBenefitPrice > 0 ? '-'.concat(totalBenefitPrice.toLocaleString()) : '0'}원`);
+    },
 };
 
 export default OutputView;
