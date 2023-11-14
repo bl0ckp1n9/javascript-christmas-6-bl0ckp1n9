@@ -1,7 +1,7 @@
 import { Console } from '@woowacourse/mission-utils';
 
 const OutputView = {
-    printOrders(orders) {
+    printOrderMenus(orders) {
         Console.print('<주문 메뉴>');
         orders.forEach((order) => {
             Console.print(`${order.name} ${order.count}개`);
@@ -9,7 +9,7 @@ const OutputView = {
     },
     printTotalPrice(totalPrice) {
         Console.print('<할인 전 총주문 금액>');
-        Console.print(`${totalPrice}원`);
+        Console.print(`${totalPrice.toLocaleString()}원`);
     },
     printEventBenefits(event) {
         Console.print('<혜택 내역>');
