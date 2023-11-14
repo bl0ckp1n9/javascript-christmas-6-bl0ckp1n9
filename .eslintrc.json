@@ -21,7 +21,8 @@
     "lines-between-class-members": "off",
     "import/extensions": "off",
     "import/no-named-as-default": "off",
-    "no-await-in-loop": "off"
+    "no-await-in-loop": "off",
+    "class-methods-use-this": "off"
   },
   "plugins": ["import"],
   "ignorePatterns": [
