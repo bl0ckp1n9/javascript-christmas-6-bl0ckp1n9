@@ -1,72 +1,72 @@
 import { fillArrayToDates, getWeekdaysDates, getWeekendsDates } from './utils.js';
 
-export const CATEGORIES = {
+export const MENU_CATEGORIES = {
     BEVERAGE: 'BEVERAGE',
     DESSERT: 'DESSERT',
     MAIN: 'MAIN',
     APPETIZER: 'APPETIZER',
 };
-const { BEVERAGE, DESSERT, MAIN, APPETIZER } = CATEGORIES;
+const { BEVERAGE, DESSERT, MAIN, APPETIZER } = MENU_CATEGORIES;
 export const MENUS = {
     COKE_ZERO: {
-        type: BEVERAGE,
-        name: '제로콜라',
-        price: 3_000,
+        TYPE: BEVERAGE,
+        NAME: '제로콜라',
+        PRICE: 3_000,
     },
     RED_WINE: {
-        type: BEVERAGE,
-        name: '레드와인',
-        price: 6_000,
+        TYPE: BEVERAGE,
+        NAME: '레드와인',
+        PRICE: 6_000,
     },
     CHAMPAGNE: {
-        type: BEVERAGE,
-        name: '샴페인',
-        price: 25_000,
+        TYPE: BEVERAGE,
+        NAME: '샴페인',
+        PRICE: 25_000,
     },
     CHOCOLATE_CAKE: {
-        type: DESSERT,
-        name: '초코케이크',
-        price: 15_000,
+        TYPE: DESSERT,
+        NAME: '초코케이크',
+        PRICE: 15_000,
     },
     ICE_CREAM: {
-        type: DESSERT,
-        name: '아이스크림',
-        price: 5_000,
+        TYPE: DESSERT,
+        NAME: '아이스크림',
+        PRICE: 5_000,
     },
     T_BONE_STEAK: {
-        type: MAIN,
-        name: '티본스테이크',
-        price: 55_000,
+        TYPE: MAIN,
+        NAME: '티본스테이크',
+        PRICE: 55_000,
     },
     BARBECUE_RIB: {
-        type: MAIN,
-        name: '바비큐립',
-        price: 54_000,
+        TYPE: MAIN,
+        NAME: '바비큐립',
+        PRICE: 54_000,
     },
     SEAFOOD_PASTA: {
-        type: MAIN,
-        name: '해산물파스타',
-        price: 35_000,
+        TYPE: MAIN,
+        NAME: '해산물파스타',
+        PRICE: 35_000,
     },
     CHRISTMAS_PASTA: {
-        type: MAIN,
-        name: '크리스마스파스타',
-        price: 25_000,
+        TYPE: MAIN,
+        NAME: '크리스마스파스타',
+        PRICE: 25_000,
     },
     MUSHROOM_SOUP: {
-        type: APPETIZER,
-        name: '양송이수프',
-        price: 6_000,
+        TYPE: APPETIZER,
+        NAME: '양송이수프',
+        PRICE: 6_000,
     },
     TAPAS: {
-        type: APPETIZER,
-        name: '타파스',
-        price: 5_500,
+        TYPE: APPETIZER,
+        NAME: '타파스',
+        PRICE: 5_500,
     },
     CAESAR_SALAD: {
-        type: APPETIZER,
-        name: '시저샐러드',
-        price: 8_000,
+        TYPE: APPETIZER,
+        NAME: '시저샐러드',
+        PRICE: 8_000,
     },
 };
 
@@ -101,48 +101,61 @@ export const MONTHS = {
     DEC: 12,
 };
 
-const PROMOTION_YEAR = 2023;
-const PROMOTION_MONTH = MONTHS.DEC;
+export const PROMOTION_YEAR = 2023;
+export const PROMOTION_MONTH = MONTHS.DEC;
+
+export const PROMOTION_CATEGORIES = {
+    CHRISTMAS: 'CHRISTMAS',
+    WEEKENDS: 'WEEKENDS',
+    WEEKDAYS: 'WEEKDAYS',
+    SPECIAL: 'SPECIAL',
+    GIFT: 'GIFT',
+};
 
 export const PROMOTION_CONFIG = {
     CHRISTMAS: {
         NAME: '크리스마스 디데이',
-        TYPE: 'CHRISTMAS',
+        EVENT: PROMOTION_CATEGORIES.CHRISTMAS,
+        TYPE: 'DISCOUNT',
+        PRODUCT: 'TOTAL',
         BENEFIT_PRICE: 1_000,
         MINIMUM_PRICE: 0,
-        GIFT: 'DISCOUNT',
-        SPECIAL_DATES: fillArrayToDates(25),
+        TARGET_DATES: fillArrayToDates(25),
     },
     WEEKENDS: {
         NAME: '주말',
-        TYPE: 'WEEKENDS',
+        EVENT: PROMOTION_CATEGORIES.WEEKENDS,
+        TYPE: 'DISCOUNT',
+        PRODUCT: MENU_CATEGORIES.MAIN,
         BENEFIT_PRICE: 2_023,
         MINIMUM_PRICE: 0,
-        GIFT: 'DISCOUNT',
-        SPECIAL_DATES: getWeekendsDates(PROMOTION_YEAR, PROMOTION_MONTH),
+        TARGET_DATES: getWeekendsDates(PROMOTION_YEAR, PROMOTION_MONTH),
     },
     WEEKDAYS: {
         NAME: '평일',
-        TYPE: 'WEEKDAYS',
+        EVENT: PROMOTION_CATEGORIES.WEEKDAYS,
+        TYPE: 'DISCOUNT',
+        PRODUCT: MENU_CATEGORIES.BEVERAGE,
         BENEFIT_PRICE: 2_023,
         MINIMUM_PRICE: 0,
-        GIFT: 'DISCOUNT',
-        SPECIAL_DATES: getWeekdaysDates(PROMOTION_YEAR, PROMOTION_MONTH),
+        TARGET_DATES: getWeekdaysDates(PROMOTION_YEAR, PROMOTION_MONTH),
     },
     SPECIAL: {
         NAME: '특별',
-        TYPE: 'SPECIAL',
+        EVENT: PROMOTION_CATEGORIES.SPECIAL,
+        TYPE: 'DISCOUNT',
+        PRODUCT: 'TOTAL',
         BENEFIT_PRICE: 2_023,
         MINIMUM_PRICE: 0,
-        GIFT: 'DISCOUNT',
-        SPECIAL_DATES: [3, 10, 17, 24, 25, 31],
+        TARGET_DATES: [3, 10, 17, 24, 25, 31],
     },
     GIFT: {
         NAME: '증정',
+        EVENT: PROMOTION_CATEGORIES.GIFT,
         TYPE: 'GIFT',
-        BENEFIT_PRICE: 25_000,
+        PRODUCT: MENUS.CHAMPAGNE,
+        BENEFIT_PRICE: MENUS.CHAMPAGNE.PRICE,
         MINIMUM_PRICE: 120_000,
-        GIFT: '샴페인',
-        SPECIAL_DATES: fillArrayToDates(31),
+        TARGET_DATES: fillArrayToDates(31),
     },
 };

@@ -10,15 +10,15 @@ class Planner {
     static validateOrderOnlyOneCategory(orders, menus, category) {
         const { orderMenuNameList } = Planner.parseOrders(orders);
         const menuNameListForCategory = Object.values(menus)
-            .filter((menu) => menu.type === category)
-            .map((menu) => menu.name);
+            .filter((menu) => menu.TYPE === category)
+            .map((menu) => menu.NAME);
 
         isEveryInclude(IS_INVALID_ORDER, orderMenuNameList, menuNameListForCategory);
     }
 
     static validateIncludeMenu(orders, menus) {
         const { orderMenuNameList } = Planner.parseOrders(orders);
-        const menuNameList = Object.values(menus).map((menu) => menu.name);
+        const menuNameList = Object.values(menus).map((menu) => menu.NAME);
 
         isSomeNotInclude(IS_INVALID_ORDER, orderMenuNameList, menuNameList);
     }
@@ -80,7 +80,7 @@ class Planner {
     }
 
     getCategories() {
-        return Array.from(new Set(Array.from(this.#menus.values()).map((menu) => menu.type)));
+        return Array.from(new Set(Array.from(this.#menus.values()).map((menu) => menu.TYPE)));
     }
     getOrders() {
         return this.getCategories()
@@ -94,7 +94,7 @@ class Planner {
         return Array.from(this.#orders.values()).reduce((acc, order) => {
             const key = this.#getKeyByName(order.name);
             const menu = this.#menus.get(key);
-            return acc + menu.price * order.count;
+            return acc + menu.PRICE * order.count;
         }, 0);
     }
 
@@ -103,11 +103,11 @@ class Planner {
     }
 
     #getCategoryByMenuName(menuName) {
-        return Array.from(this.#menus.values()).find((menuMap) => menuMap.name === menuName).type;
+        return Array.from(this.#menus.values()).find((menuMap) => menuMap.NAME === menuName).TYPE;
     }
 
     #getKeyByName(name) {
-        return Array.from(this.#menus.keys()).find((key) => this.#menus.get(key).name === name);
+        return Array.from(this.#menus.keys()).find((key) => this.#menus.get(key).NAME === name);
     }
 }
 
