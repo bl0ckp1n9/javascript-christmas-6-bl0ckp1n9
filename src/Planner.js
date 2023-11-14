@@ -107,6 +107,12 @@ class Planner {
         validators.forEach((validator) => validator());
     }
 
+    applyChristmasDdayEvent() {}
+    applyWeekdaysEvent() {}
+    applyWeekendEvent() {}
+
+    applyGiftEvent() {}
+
     #getCategoryByMenuName(menuName) {
         return Array.from(this.#menus.values()).find((menuMap) => menuMap.name === menuName).type;
     }
