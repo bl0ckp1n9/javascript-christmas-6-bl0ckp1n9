@@ -1,28 +1,29 @@
 import { DAYS } from './constant.js';
 
 export const getWeekendsDates = (year, month) => {
-    const date = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0);
+    const endDate = new Date(year, month, 0).getDate();
+    const startDate = new Date(year, month - 1, 1);
     const weekends = [];
-    while (date <= endDate) {
-        if (date.getDay() === DAYS.FRI || date.getDay() === DAYS.SAT) {
-            weekends.push(date.getDate());
+    for (let date = 1; date <= endDate; date += 1) {
+        if (startDate.getDay() === DAYS.FRI || startDate.getDay() === DAYS.SAT) {
+            weekends.push(date);
         }
-
-        date.setDate(date.getDate() + 1);
+        startDate.setDate(startDate.getDate() + 1);
     }
+
     return weekends;
 };
 export const getWeekdaysDates = (year, month) => {
-    const date = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0);
+    const endDate = new Date(year, month, 0).getDate();
+    const startDate = new Date(year, month - 1, 1);
     const weekdays = [];
-    while (date <= endDate) {
-        if (date.getDay() !== DAYS.FRI && date.getDay() !== DAYS.SAT) {
-            weekdays.push(date.getDate());
+    for (let date = 1; date <= endDate; date += 1) {
+        if (startDate.getDay() !== DAYS.FRI && startDate.getDay() !== DAYS.SAT) {
+            weekdays.push(date);
         }
-        date.setDate(date.getDate() + 1);
+        startDate.setDate(startDate.getDate() + 1);
     }
+
     return weekdays;
 };
 

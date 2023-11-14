@@ -3,7 +3,7 @@ import { PROMOTION_CONFIG } from './constant.js';
 export const ChristPromotion = {
     CONFIG: PROMOTION_CONFIG.CHRISTMAS,
     getPromotionPrice(date) {
-        if (date > this.END_DATE) return 0;
+        if (date > 31) return 0;
         return this.BENEFIT_PRICE + this.BENEFIT_PRICE * 0.1 * (date - 1);
     },
 };
