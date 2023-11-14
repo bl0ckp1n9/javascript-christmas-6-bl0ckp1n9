@@ -8,7 +8,7 @@ const OutputView = {
             Console.print(`${order.name} ${order.count}개`);
         });
     },
-    printTotalPrice(totalPrice) {
+    printTotalPriceWithoutDiscount(totalPrice) {
         Console.print('<할인 전 총주문 금액>');
         Console.print(`${totalPrice.toLocaleString()}원`);
     },
