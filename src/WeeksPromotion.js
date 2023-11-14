@@ -1,11 +1,12 @@
 import { DAYS } from './constant.js';
 
-class DecemberPromotion {
+class WeeksPromotion {
     #dateMemory = new Map();
+    #discountPrice = 0;
     #targetDate;
-    #discountPrice = 2_023;
-    constructor(year, month) {
+    constructor(year, month, discountPrice) {
         this.#targetDate = new Date(year, month, 0);
+        this.#discountPrice = discountPrice;
         this.#memorizeDate();
     }
 
@@ -32,12 +33,11 @@ class DecemberPromotion {
         }
     }
 
-    applyWeekendPromotion(orders) {
+    getWeeksPromotionPrice(orders) {
         const menuCount = orders.reduce((acc, cur) => acc + Number(cur.count), 0);
 
         return this.#discountPrice * menuCount;
     }
-    applyWeekdayPromotion(orders) {}
 }
 
-export default DecemberPromotion;
+export default WeeksPromotion;
