@@ -28,6 +28,7 @@ const OutputView = {
     },
     printTotalPriceWithDiscount(totalPriceWithDiscount) {
         Console.print('<할인 후 예상 결제 금액>');
+        Console.print(`${totalPriceWithDiscount.toLocaleString()}원`);
     },
     printGiveWayMenu(promotions) {
         const giftMenu = promotions.find((promotion) => promotion.EVENT === PROMOTION_CATEGORIES.GIFT);
