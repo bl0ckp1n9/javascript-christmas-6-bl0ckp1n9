@@ -20,8 +20,12 @@ const OutputView = {
     printTotalPriceWithDiscount(totalPriceWithDiscount) {
         Console.print('<할인 후 예상 결제 금액>');
     },
-    printGiveWayMenu(giveWay) {
+    printGiveWayMenu(giftMenu) {
+        const { PRODUCT, promotionBenefitPrice } = giftMenu;
+        const isApplied = promotionBenefitPrice > 0;
+
         Console.print('<증정 메뉴>');
+        Console.print(isApplied ? `${PRODUCT.NAME} 1개` : '없음');
     },
 };
 
