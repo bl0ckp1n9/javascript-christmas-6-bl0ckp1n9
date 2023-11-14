@@ -22,10 +22,17 @@ class Planner {
         });
         return activePromotions;
     }
-
     getTotalBenefitPrice() {
         const promotions = this.getPromotionsByOrderDate();
         return promotions.reduce((acc, cur) => acc + cur.promotionBenefitPrice, 0);
+    }
+
+    getTotalPriceWithDiscount() {
+        const promotions = this.getPromotionsByOrderDate();
+        const totalPrice = this.#order.getTotalPrice();
+        const getTotalBenefitPrice = this.getTotalBenefitPrice();
+        const giftMenu = promotions.find((promotion) => promotion.EVENT === PROMOTION_CATEGORIES.GIFT);
+        return totalPrice - (getTotalBenefitPrice - giftMenu.promotionBenefitPrice);
     }
     #calculatePromotions(promotion) {
         const promotionCategory = promotion.CONFIG.EVENT;
