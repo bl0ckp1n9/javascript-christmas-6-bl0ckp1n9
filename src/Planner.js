@@ -59,15 +59,10 @@ class Planner {
         };
     }
 
-    #date = '';
     #orders = new Map();
     #menus = new Map();
     constructor(menus) {
         this.#menus = new Map(Object.entries(menus));
-    }
-
-    setDate(date) {
-        this.#date = date;
     }
 
     setOrders(orders) {
