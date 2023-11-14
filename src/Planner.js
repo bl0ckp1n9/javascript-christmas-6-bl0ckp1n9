@@ -1,5 +1,4 @@
-import { isDuplicate, isEveryIndclude, isMoreThanLimit, isNotInclude, isNotMatchRegex } from './validators.js';
-import { CATEGORIES } from './constant.js';
+import { isDuplicate, isEveryInclude, isMoreThanLimit, isNotMatchRegex, isSomeNotInclude } from './validators.js';
 
 const ERROR_MESSAGE = Object.freeze({
     INVALID_DATE: '유효하지 않은 날짜입니다. 다시 입력해 주세요.',
@@ -8,13 +7,63 @@ const ERROR_MESSAGE = Object.freeze({
 
 const { INVALID_DATE, IS_INVALID_ORDER } = ERROR_MESSAGE;
 class Planner {
+    static validateOrderOnlyOneCategory(orders, menus, category) {
+        const { orderMenuNameList } = Planner.parseOrders(orders);
+        const menuNameListForCategory = Object.values(menus)
+            .filter((menu) => menu.type === category)
+            .map((menu) => menu.name);
+
+        isEveryInclude('b', orderMenuNameList, menuNameListForCategory);
+    }
+
+    static validateIncludeMenu(orders, menus) {
+        const { orderMenuNameList } = Planner.parseOrders(orders);
+        const menuNameList = Object.values(menus).map((menu) => menu.name);
+
+        isSomeNotInclude('a', orderMenuNameList, menuNameList);
+    }
+
+    static validateDuplicationOrder(orders) {
+        const { orderMenuNameList } = Planner.parseOrders(orders);
+
+        isDuplicate('c', orderMenuNameList);
+    }
+
+    static validateLimitOrderCount(orders, limitOrderCount) {
+        const { totalOrderCount } = Planner.parseOrders(orders);
+
+        isMoreThanLimit('d', totalOrderCount, limitOrderCount);
+    }
+
+    static validateOrderFormat(orders, regex) {
+        const { orderList } = Planner.parseOrders(orders);
+
+        orderList.forEach((order) => isNotMatchRegex('e', order, regex));
+    }
+
+    static validateDayFormat(date, regex) {
+        isNotMatchRegex(INVALID_DATE, date, regex);
+    }
+
+    static parseOrders(orders) {
+        const orderList = orders.split(',').map((order) => order.trim());
+        const orderMenuNameList = orderList.map((order) => order.split('-')[0]);
+        const orderMenuCountList = orderList.map((order) => order.split('-')[1]);
+        const totalOrderCount = orderMenuCountList.reduce((acc, cur) => acc + Number(cur), 0);
+
+        return {
+            orderList,
+            orderMenuNameList,
+            orderMenuCountList,
+            totalOrderCount,
+        };
+    }
+
     #date = '';
-    #limitOrderCount = 0;
     #orders = new Map();
     #menus = new Map();
-    constructor(menus, limitOrderCount) {
-        this.#initializeMenu(menus);
-        this.#limitOrderCount = limitOrderCount;
+    constructor(menus) {
+        this.#menus = new Map(Object.entries(menus));
     }
 
     setDate(date) {
@@ -22,7 +71,7 @@ class Planner {
     }
 
     setOrders(orders) {
-        const { orderMenuNameList, orderMenuCountList } = this.#parseOrders(orders);
+        const { orderMenuNameList, orderMenuCountList } = Planner.parseOrders(orders);
         orderMenuNameList.forEach((menuName, index) => {
             const category = this.#getCategoryByMenuName(menuName);
             const key = this.#getKeyByName(menuName);
@@ -54,83 +103,8 @@ class Planner {
         }, 0);
     }
 
-    isValidDate(date) {
-        const validators = [() => this.#isNotValidDateFormat(date)];
-
+    validate(validators) {
         validators.forEach((validator) => validator());
-
-        return true;
-    }
-    isValidOrders(orders) {
-        const validators = [
-            () => this.#isMoreThanMaxOrderCount(orders),
-            () => this.#isNotValidOrderFormat(orders),
-            () => this.#isDuplicateOrder(orders),
-            () => this.#isNotIncludeMenu(orders),
-            () => this.#isOrderOnlyOneCategory(orders, CATEGORIES.BEVERAGE),
-        ];
-
-        validators.forEach((validator) => validator());
-
-        return true;
-    }
-
-    #initializeMenu(menus) {
-        this.#menus = new Map(Object.entries(menus));
-    }
-
-    #isOrderOnlyOneCategory(orders, category) {
-        const { orderMenuNameList } = this.#parseOrders(orders);
-        const drinkMenuNameList = Array.from(this.#menus.values())
-            .filter((menuMap) => menuMap.type === category)
-            .map((menuMap) => menuMap.name);
-
-        isEveryIndclude(IS_INVALID_ORDER, orderMenuNameList, drinkMenuNameList);
-    }
-    #isNotIncludeMenu(orders) {
-        const { orderMenuNameList } = this.#parseOrders(orders);
-        const menuNameList = Array.from(this.#menus.values()).map((menuMap) => menuMap.name);
-
-        orderMenuNameList.forEach((menuName) => isNotInclude(IS_INVALID_ORDER, menuName, menuNameList));
-    }
-
-    #isDuplicateOrder(orders) {
-        const { orderMenuNameList } = this.#parseOrders(orders);
-
-        isDuplicate(IS_INVALID_ORDER, orderMenuNameList);
-    }
-
-    #isMoreThanMaxOrderCount(orders) {
-        const { totalOrderCount } = this.#parseOrders(orders);
-
-        isMoreThanLimit(IS_INVALID_ORDER, totalOrderCount, this.#limitOrderCount);
-    }
-
-    #isNotValidOrderFormat(orders) {
-        const { orderList } = this.#parseOrders(orders);
-        const validOrderFormatRegExp = /^([가-힣\w]+)-([1-9]\d*)$/;
-
-        orderList.forEach((order) => isNotMatchRegex(IS_INVALID_ORDER, order, validOrderFormatRegExp));
-    }
-
-    #isNotValidDateFormat(date) {
-        const validDateFormatRegExp = /^(3[01]|[12][0-9]|[1-9])$/;
-
-        isNotMatchRegex(INVALID_DATE, date, validDateFormatRegExp);
-    }
-
-    #parseOrders(orders) {
-        const orderList = orders.split(',').map((order) => order.trim());
-        const orderMenuNameList = orderList.map((order) => order.split('-')[0]);
-        const orderMenuCountList = orderList.map((order) => order.split('-')[1]);
-        const totalOrderCount = orderMenuCountList.reduce((acc, cur) => acc + Number(cur), 0);
-
-        return {
-            orderList,
-            orderMenuNameList,
-            orderMenuCountList,
-            totalOrderCount,
-        };
     }
 
     #getCategoryByMenuName(menuName) {

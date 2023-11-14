@@ -11,8 +11,8 @@ export const isDuplicate = (errorMessage, targets) =>
 
 export const isNotMatchRegex = (errorMessage, target, regex) => check(errorMessage, () => !regex.test(target));
 
-export const isNotInclude = (errorMessage, target, references) =>
-    check(errorMessage, () => !references.includes(target));
-
-export const isEveryIndclude = (errorMessage, targets, references) =>
+export const isEveryInclude = (errorMessage, targets, references) =>
     check(errorMessage, () => targets.every((item) => references.includes(item)));
+
+export const isSomeNotInclude = (errorMessage, targets, references) =>
+    check(errorMessage, () => targets.some((item) => !references.includes(item)));

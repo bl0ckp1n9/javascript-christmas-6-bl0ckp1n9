@@ -1,31 +1,39 @@
 import Planner from '../src/Planner';
-import { MENU_LIST } from '../src/constant.js';
+import { CATEGORIES, LIMIT_ORDER_COUNT, MENUS, REGEX } from '../src/constant.js';
 
+const callValidate = (input, validate) => validate(input);
 describe('Planner 테스트', () => {
-    const planner = new Planner(MENU_LIST);
+    const planner = new Planner(MENUS, LIMIT_ORDER_COUNT);
 
     describe('예약 날짜 테스트', () => {
+        const dateValidators = (input) => [() => Planner.validateDayFormat(input, REGEX.DAY_FORMAT)];
         test('유효한 날짜', () => {
-            for (let i = 1; i <= 31; i++) {
-                expect(() => planner.isValidDate(i)).toBeTruthy();
+            for (let input = 1; input <= 31; input++) {
+                expect(() => callValidate(input, (input) => planner.validate(dateValidators(input)))).not.toThrow();
             }
         });
         test.each([[0], [32], ['-1'], [''], ['a'], ['1a'], ['a1']])('유효하지 않은 날짜', (input) => {
-            expect(() => planner.isValidDate(input)).toThrow();
+            expect(() => callValidate(input, (input) => planner.validate(dateValidators(input)))).toThrow();
         });
     });
 
     describe('주문 테스트', () => {
+        const orderValidators = (input) => [
+            () => Planner.validateOrderFormat(input, REGEX.ORDER_FORMAT),
+            () => Planner.validateLimitOrderCount(input, LIMIT_ORDER_COUNT),
+            () => Planner.validateDuplicationOrder(input),
+            () => Planner.validateIncludeMenu(input, MENUS),
+            () => Planner.validateOrderOnlyOneCategory(input, MENUS, CATEGORIES.BEVERAGE),
+        ];
         test.each([
             ['티본스테이크-1'],
             ['티본스테이크-1,제로콜라-1'],
             ['티본스테이크-1,제로콜라-1,타파스-1'],
-            ['티본스테이크-1,제로콜라-1,타파스-1,와인-1'],
+            ['티본스테이크-1,제로콜라-1,타파스-1,레드와인-1'],
             ['티본스테이크-10,타파스-10'],
-            [' 티본스테이크-10 , 제로콜라-10 '],
+            ['티본스테이크-10,제로콜라-10'],
         ])('주문이 유효할 때', (input) => {
-            console.log(input);
-            expect(() => planner.isValidOrders(input)).toBeTruthy();
+            expect(() => callValidate(input, (input) => planner.validate(orderValidators(input)))).not.toThrow();
         });
 
         test.each([
@@ -41,7 +49,7 @@ describe('Planner 테스트', () => {
             ['티본스테이크-15,제로콜라-6'],
             ['제로콜라-1,레드와인-2'],
         ])('주문이 유효하지 않을 때', (input) => {
-            expect(() => planner.isValidOrders(input)).toThrow();
+            expect(() => callValidate(input, (input) => planner.validate(orderValidators(input)))).toThrow();
         });
     });
 });
