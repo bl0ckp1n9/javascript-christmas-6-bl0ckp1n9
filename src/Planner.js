@@ -107,7 +107,13 @@ class Planner {
         validators.forEach((validator) => validator());
     }
 
-    applyChristmasDdayEvent() {}
+    getChristmasDdayDiscountPrice() {
+        const baseDiscountPrice = 1_000;
+        const increasePrice = 100;
+
+        return baseDiscountPrice + increasePrice * (Number(this.#date) - 1);
+    }
+
     applyWeekdaysEvent() {}
     applyWeekendEvent() {}
 
