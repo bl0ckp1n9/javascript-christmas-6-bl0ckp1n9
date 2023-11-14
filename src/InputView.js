@@ -6,12 +6,12 @@ const MESSAGE = {
 };
 
 export const InputView = {
-    async readDate(validate) {
+    async readOrderDate(validate) {
         const input = await this.readLineLoopAsync(MESSAGE.ASK_DATE, validate);
 
         return input;
     },
-    async readOrders(validate) {
+    async readOrderMenus(validate) {
         const input = await this.readLineLoopAsync(MESSAGE.ASK_MENU, validate);
 
         return input;
