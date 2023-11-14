@@ -8,7 +8,6 @@ class Planner {
         this.#order = order;
         this.#calendar = calendar;
     }
-
     getPromotionsByOrderDate() {
         const promotions = this.#calendar.getPromotionsByDate(this.#order.getOrderDate());
         const activePromotions = [];
@@ -26,13 +25,19 @@ class Planner {
         const promotions = this.getPromotionsByOrderDate();
         return promotions.reduce((acc, cur) => acc + cur.promotionBenefitPrice, 0);
     }
-
     getTotalPriceWithDiscount() {
         const promotions = this.getPromotionsByOrderDate();
         const totalPrice = this.#order.getTotalPrice();
         const getTotalBenefitPrice = this.getTotalBenefitPrice();
         const giftMenu = promotions.find((promotion) => promotion.EVENT === PROMOTION_CATEGORIES.GIFT);
         return totalPrice - (getTotalBenefitPrice - giftMenu.promotionBenefitPrice);
+    }
+    getBadge() {
+        const totalBenefitPrice = this.getTotalBenefitPrice();
+        if (totalBenefitPrice >= 20_000) return '산타';
+        if (totalBenefitPrice >= 10_000) return '트리';
+        if (totalBenefitPrice >= 5_000) return '벨';
+        return '없음';
     }
     #calculatePromotions(promotion) {
         const promotionCategory = promotion.CONFIG.EVENT;

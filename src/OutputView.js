@@ -23,9 +23,6 @@ const OutputView = {
         if (printData.length === 0) printData.push('없음');
         Console.print(printData.join('\n'));
     },
-    printBadge(badge) {
-        Console.print('<12월 이벤트 배지>');
-    },
     printTotalPriceWithDiscount(totalPriceWithDiscount) {
         Console.print('<할인 후 예상 결제 금액>');
         Console.print(`${totalPriceWithDiscount.toLocaleString()}원`);
@@ -41,6 +38,10 @@ const OutputView = {
     printTotalBenefitPrice(totalBenefitPrice) {
         Console.print('<총 혜택 금액>');
         Console.print(`${totalBenefitPrice > 0 ? '-'.concat(totalBenefitPrice.toLocaleString()) : '0'}원`);
+    },
+    printBadge(badge) {
+        Console.print('<12월 이벤트 배지>');
+        Console.print(badge);
     },
 };
 
