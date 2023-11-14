@@ -45,16 +45,15 @@ const PromotionFactory = {
     calculatePromotionPrice(promotion, order) {
         const promotionCategory = promotion.CONFIG.EVENT;
         if (promotionCategory === PROMOTION_CATEGORIES.CHRISTMAS || promotionCategory === PROMOTION_CATEGORIES.SPECIAL)
-            return promotion.getPromotionPrice(this.order.getOrderDate());
+            return promotion.getPromotionPrice(order.getOrderDate());
         if (
             promotionCategory === PROMOTION_CATEGORIES.WEEKENDS ||
             promotionCategory === PROMOTION_CATEGORIES.WEEKDAYS
         ) {
-            const productInOrders = this.order.getOrderMenuByCategory(promotion.CONFIG.PRODUCT);
+            const productInOrders = order.getOrderMenuByCategory(promotion.CONFIG.PRODUCT);
             return promotion.getPromotionPrice(productInOrders);
         }
-        if (promotionCategory === PROMOTION_CATEGORIES.GIFT)
-            return promotion.getPromotionPrice(this.order.getTotalPrice());
+        if (promotionCategory === PROMOTION_CATEGORIES.GIFT) return promotion.getPromotionPrice(order.getTotalPrice());
         return 0;
     },
 };
