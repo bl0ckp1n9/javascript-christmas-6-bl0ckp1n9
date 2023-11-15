@@ -24,7 +24,7 @@ class Order {
     static validateOrderOnlyOneCategory(orderMenus, menus, category) {
         const { orderMenuNameList } = Order.parseOrders(orderMenus);
         const menuNameListForCategory = Object.values(menus)
-            .filter((menu) => menu.TYPE === category)
+            .filter((menu) => menu.CATEGORY === category)
             .map((menu) => menu.NAME);
 
         isEveryInclude(IS_INVALID_ORDER, orderMenuNameList, menuNameListForCategory);
