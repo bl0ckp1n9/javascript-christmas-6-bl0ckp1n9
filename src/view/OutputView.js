@@ -19,64 +19,46 @@ const MESSAGE = {
     TOTAL_BENEFIT_PRICE: (price) => (price > 0 ? `-${price.toLocaleString()}원` : '0원'),
 };
 
-const {
-    GREETINGS,
-    INTRO_PREVIEW,
-    ORDER_MENU_TITLE,
-    TOTAL_PRICE_WITHOUT_DISCOUNT_TITLE,
-    BENEFIT_DETAILS_TITLE,
-    TOTAL_PRICE_WITH_DISCOUNT_TITLE,
-    GIFT_TITLE,
-    BENEFIT_TOTAL_PRICE_TITLE,
-    BADGE_TITLE,
-    NONE,
-    MENU,
-    PRICE,
-    GIFT,
-    DISCOUNT,
-    TOTAL_BENEFIT_PRICE,
-} = MESSAGE;
-
 const OutputView = {
     printGreetings() {
-        Console.print(GREETINGS);
+        Console.print(MESSAGE.GREETINGS);
     },
     printPreviewMessage() {
-        Console.print(INTRO_PREVIEW);
+        Console.print(MESSAGE.INTRO_PREVIEW);
         Console.print('');
     },
     printOrderMenus(orders) {
-        Console.print(ORDER_MENU_TITLE);
+        Console.print(MESSAGE.ORDER_MENU_TITLE);
 
         orders.forEach((order) => {
-            Console.print(MENU(order.name, order.count));
+            Console.print(MESSAGE.MENU(order.name, order.count));
         });
 
         Console.print('');
     },
     printTotalPriceWithoutDiscount(totalPrice) {
-        Console.print(TOTAL_PRICE_WITHOUT_DISCOUNT_TITLE);
-        Console.print(PRICE(totalPrice));
+        Console.print(MESSAGE.TOTAL_PRICE_WITHOUT_DISCOUNT_TITLE);
+        Console.print(MESSAGE.PRICE(totalPrice));
         Console.print('');
     },
     printBenefitDetails(promotions) {
-        Console.print(BENEFIT_DETAILS_TITLE);
+        Console.print(MESSAGE.BENEFIT_DETAILS_TITLE);
 
         const printData = [];
 
         promotions.forEach((promotion) => {
             const { NAME, promotionBenefitPrice } = promotion;
             const isApplied = promotionBenefitPrice > 0;
-            if (isApplied) printData.push(DISCOUNT(NAME, promotionBenefitPrice));
+            if (isApplied) printData.push(MESSAGE.DISCOUNT(NAME, promotionBenefitPrice));
         });
-        if (printData.length === 0) printData.push(NONE);
+        if (printData.length === 0) printData.push(MESSAGE.NONE);
 
         Console.print(printData.join('\n'));
         Console.print('');
     },
     printTotalPriceWithDiscount(totalPriceWithDiscount) {
-        Console.print(TOTAL_PRICE_WITH_DISCOUNT_TITLE);
-        Console.print(PRICE(totalPriceWithDiscount));
+        Console.print(MESSAGE.TOTAL_PRICE_WITH_DISCOUNT_TITLE);
+        Console.print(MESSAGE.PRICE(totalPriceWithDiscount));
         Console.print('');
     },
     printGiveWayMenu(promotions) {
@@ -84,17 +66,17 @@ const OutputView = {
         const { PRODUCT, promotionBenefitPrice } = giftMenu;
         const isApplied = promotionBenefitPrice > 0;
 
-        Console.print(GIFT_TITLE);
-        Console.print(isApplied ? GIFT(PRODUCT.NAME, 1) : NONE);
+        Console.print(MESSAGE.GIFT_TITLE);
+        Console.print(isApplied ? MESSAGE.GIFT(PRODUCT.NAME, 1) : MESSAGE.NONE);
         Console.print('');
     },
     printTotalBenefitPrice(totalBenefitPrice) {
-        Console.print(BENEFIT_TOTAL_PRICE_TITLE);
-        Console.print(TOTAL_BENEFIT_PRICE(totalBenefitPrice));
+        Console.print(MESSAGE.BENEFIT_TOTAL_PRICE_TITLE);
+        Console.print(MESSAGE.TOTAL_BENEFIT_PRICE(totalBenefitPrice));
         Console.print('');
     },
     printBadge(badge) {
-        Console.print(BADGE_TITLE);
+        Console.print(MESSAGE.BADGE_TITLE);
         Console.print(badge);
     },
 };
