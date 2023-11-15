@@ -26,5 +26,4 @@ export const getWeekdaysDates = (year, month) => {
 
     return weekdays;
 };
-
 export const fillArrayToDates = (end) => [...Array(end)].map((v, i) => i + 1);

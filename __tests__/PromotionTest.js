@@ -1,4 +1,4 @@
-import { MENUS, PROMOTIONS } from '../src/constant/index.js';
+import { MENUS } from '../src/constant/index.js';
 import { Order } from '../src/model/index.js';
 import { fillArrayToDates } from '../src/util/index.js';
 import { Promotions } from '../src/model/Promotions.js';

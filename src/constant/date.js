@@ -7,7 +7,6 @@ export const DAYS = {
     FRI: 5,
     SAT: 6,
 };
-
 export const MONTHS = {
     JAN: 1,
     FEB: 2,

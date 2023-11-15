@@ -29,36 +29,30 @@ class Order {
 
         isEveryInclude(IS_INVALID_ORDER, orderMenuNameList, menuNameListForCategory);
     }
-
     static validateIncludeMenu(orderMenus, menus) {
         const { orderMenuNameList } = Order.parseOrders(orderMenus);
         const menuNameList = Object.values(menus).map((menu) => menu.NAME);
 
         isSomeNotInclude(IS_INVALID_ORDER, orderMenuNameList, menuNameList);
     }
-
     static validateDuplicationOrder(orderMenus) {
         const { orderMenuNameList } = Order.parseOrders(orderMenus);
 
         isDuplicate(IS_INVALID_ORDER, orderMenuNameList);
     }
-
     static validateLimitOrderCount(orderMenus, limitOrderCount) {
         const { totalOrderCount } = Order.parseOrders(orderMenus);
 
         isMoreThanLimit(IS_INVALID_ORDER, totalOrderCount, limitOrderCount);
     }
-
     static validateOrderMenuFormat(orderMenus, regex) {
         const { orderMenuList } = Order.parseOrders(orderMenus);
 
         orderMenuList.forEach((orderMenu) => isNotMatchRegex(IS_INVALID_ORDER, orderMenu, regex));
     }
-
     static validateDayFormat(date, regex) {
         isNotMatchRegex(INVALID_DATE, date, regex);
     }
-
     static parseOrders(orderMenu) {
         const orderMenuList = orderMenu.split(',').map((menu) => menu.trim());
         const orderMenuNameList = orderMenuList.map((menu) => menu.split('-')[0]);
@@ -88,7 +82,6 @@ class Order {
             .map((categoryName) => this.getOrderMenuByCategory(categoryName))
             .flat();
     }
-
     getTotalPrice() {
         return Array.from(this.#orderMenus.values()).reduce((acc, orderMenu) => {
             const key = this.#getKeyByMenuName(orderMenu.name);
@@ -96,15 +89,12 @@ class Order {
             return acc + menu.PRICE * orderMenu.count;
         }, 0);
     }
-
     getOrderDate() {
         return this.#orderDate;
     }
-
     getOrderMenuByCategory(categoryName) {
         return Array.from(this.#orderMenus.values()).filter((orderMenu) => orderMenu.category === categoryName);
     }
-
     #setOrderMenus(orderMenus) {
         const { orderMenuNameList, orderMenuCountList } = Order.parseOrders(orderMenus);
         orderMenuNameList.forEach((menuName, index) => {
@@ -118,15 +108,12 @@ class Order {
             });
         });
     }
-
     #getOrderMenuCategories() {
         return Array.from(new Set(Array.from(this.#menus.values()).map((menu) => menu.CATEGORY)));
     }
-
     #getCategoryByMenuName(menuName) {
         return Array.from(this.#menus.values()).find((menuMap) => menuMap.NAME === menuName).CATEGORY;
     }
-
     #getKeyByMenuName(menuName) {
         return Array.from(this.#menus.keys()).find((key) => this.#menus.get(key).NAME === menuName);
     }

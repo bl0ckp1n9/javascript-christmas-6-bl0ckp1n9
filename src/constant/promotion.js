@@ -20,11 +20,9 @@ export const BADGE = {
         PRICE: 0,
     },
 };
-
 export const PROMOTION_MINIMUM_PRICE = 10_000;
 export const PROMOTION_YEAR = 2023;
 export const PROMOTION_MONTH = MONTHS.DEC;
-
 export const PROMOTION_CATEGORIES = {
     CHRISTMAS: 'CHRISTMAS',
     WEEKENDS: 'WEEKENDS',
@@ -32,14 +30,12 @@ export const PROMOTION_CATEGORIES = {
     SPECIAL: 'SPECIAL',
     GIFT: 'GIFT',
 };
-
 export const PROMOTION_PRODUCTS = {
     TOTAL: 'TOTAL',
     DESSERT: MENU_CATEGORIES.DESSERT,
     MAIN: MENU_CATEGORIES.MAIN,
     CHAMPAGNE: MENUS.CHAMPAGNE,
 };
-
 export const PROMOTIONS = {
     CHRISTMAS: {
         NAME: '크리스마스 디데이',

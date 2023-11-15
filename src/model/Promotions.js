@@ -7,7 +7,6 @@ const ChristPromotion = {
         return this.CONFIG.BENEFIT_PRICE + this.CONFIG.BENEFIT_PRICE * 0.1 * (date - 1);
     },
 };
-
 const WeekendsPromotion = {
     CONFIG: PROMOTIONS.WEEKENDS,
     getPromotionPrice(order) {
@@ -24,14 +23,12 @@ const WeekdaysPromotion = {
         return this.CONFIG.BENEFIT_PRICE * menuCount;
     },
 };
-
 const SpecialPromotion = {
     CONFIG: PROMOTIONS.SPECIAL,
     getPromotionPrice() {
         return this.CONFIG.BENEFIT_PRICE;
     },
 };
-
 const GiftPromotion = {
     CONFIG: PROMOTIONS.GIFT,
     getPromotionPrice(order) {
@@ -40,7 +37,5 @@ const GiftPromotion = {
         return this.CONFIG.BENEFIT_PRICE;
     },
 };
-
 export const Promotions = [ChristPromotion, WeekendsPromotion, WeekdaysPromotion, SpecialPromotion, GiftPromotion];
-
 export default Promotions;
