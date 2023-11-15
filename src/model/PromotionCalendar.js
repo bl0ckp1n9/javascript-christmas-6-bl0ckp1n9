@@ -13,10 +13,10 @@ class PromotionCalendar {
     getPromotionsByDate(date) {
         return this.#calendar.get(Number(date));
     }
-    #setPromotionToCalendar(date, event) {
-        const eventList = this.#calendar.get(date);
-        eventList.push(event);
-        this.#calendar.set(date, eventList);
+    #setPromotionToCalendar(date, promotion) {
+        const promotions = this.#calendar.get(date);
+        promotions.push(promotion);
+        this.#calendar.set(date, promotions);
     }
     #setPromotionsToCalendar(promotions) {
         const start = this.#startDate.getDate();
