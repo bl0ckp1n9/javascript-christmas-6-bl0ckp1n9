@@ -1,4 +1,4 @@
-import { MENUS, PROMOTION_CONFIG } from '../src/constant/index.js';
+import { MENUS, PROMOTIONS } from '../src/constant/index.js';
 import { Order } from '../src/model/index.js';
 import { fillArrayToDates } from '../src/util/index.js';
 import { Promotions } from '../src/model/Promotions.js';
@@ -19,8 +19,8 @@ const {
 } = MENUS;
 
 const calculateChristmasPromotionPrice = (orderDate, rate) => {
-    const { BENEFIT_PRICE } = PROMOTION_CONFIG.CHRISTMAS;
-    return PROMOTION_CONFIG.CHRISTMAS.BENEFIT_PRICE + BENEFIT_PRICE * rate * (orderDate - 1);
+    const { BENEFIT_PRICE } = PROMOTIONS.CHRISTMAS;
+    return PROMOTIONS.CHRISTMAS.BENEFIT_PRICE + BENEFIT_PRICE * rate * (orderDate - 1);
 };
 
 describe('Promotion 테스트', () => {
