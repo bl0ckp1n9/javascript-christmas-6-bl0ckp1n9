@@ -8,7 +8,8 @@ class PromotionCalendar {
         const promotionDate = new Date(year, month, 0);
         this.#endDate = new Date(year, month, promotionDate.getDate());
         this.#startDate = new Date(year, month, 1);
-        this.#setPromotionsToCalendar(promotionFactory.promotionList);
+        this.#promotionFactory = promotionFactory;
+        this.#setPromotionsToCalendar(this.#promotionFactory.promotionList);
     }
 
     getPromotionsByDate(date) {
