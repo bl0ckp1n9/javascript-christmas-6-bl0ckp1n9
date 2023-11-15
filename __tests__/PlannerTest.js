@@ -1,5 +1,5 @@
 import { MENUS, PROMOTIONS } from '../src/constant/index.js';
-import { calculateChristmasPromotionPrice, getPromotionsByOrderDate, makePlanner } from './test.js';
+import { calculateChristmasPromotionPrice, getPromotionsByOrderDate, makePlanner } from './utils.js';
 
 const { CHRISTMAS, WEEKENDS, WEEKDAYS, SPECIAL, GIFT } = PROMOTIONS;
 
@@ -115,5 +115,65 @@ describe('Planner 테스트', () => {
         const { orderMenus, orderDate, expectedResult } = input;
         const planner = makePlanner(orderMenus, orderDate);
         expect(planner.getTotalBenefitPrice()).toBe(expectedResult);
+    });
+
+    test.each([
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-1,${COKE_ZERO.NAME}-1`,
+            orderDate: 1,
+            expectedResult:
+                T_BONE_STEAK.PRICE + COKE_ZERO.PRICE - (calculateChristmasPromotionPrice(1) + WEEKENDS.BENEFIT_PRICE),
+        },
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-1,${COKE_ZERO.NAME}-1,${BARBECUE_RIB.NAME}-1,${CHOCOLATE_CAKE.NAME}-2`,
+            orderDate: 3,
+            expectedResult:
+                T_BONE_STEAK.PRICE +
+                COKE_ZERO.PRICE +
+                BARBECUE_RIB.PRICE * 1 +
+                CHOCOLATE_CAKE.PRICE * 2 -
+                (calculateChristmasPromotionPrice(3) + WEEKENDS.BENEFIT_PRICE * 2 + SPECIAL.BENEFIT_PRICE),
+        },
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-2,${COKE_ZERO.NAME}-1,${SEAFOOD_PASTA.NAME}-1,${CHOCOLATE_CAKE.NAME}-2,${ICE_CREAM.NAME}-3`,
+            orderDate: 9,
+            expectedResult:
+                T_BONE_STEAK.PRICE * 2 +
+                COKE_ZERO.PRICE +
+                SEAFOOD_PASTA.PRICE +
+                CHOCOLATE_CAKE.PRICE * 2 +
+                ICE_CREAM.PRICE * 3 -
+                (calculateChristmasPromotionPrice(9) + WEEKENDS.BENEFIT_PRICE * 3),
+        },
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-1,${ICE_CREAM.NAME}-1,${CHOCOLATE_CAKE.NAME}-1`,
+            orderDate: 18,
+            expectedResult:
+                T_BONE_STEAK.PRICE +
+                ICE_CREAM.PRICE +
+                CHOCOLATE_CAKE.PRICE -
+                (calculateChristmasPromotionPrice(18) + WEEKDAYS.BENEFIT_PRICE * 2),
+        },
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-1,${COKE_ZERO.NAME}-1`,
+            orderDate: 25,
+            expectedResult:
+                T_BONE_STEAK.PRICE + COKE_ZERO.PRICE - (calculateChristmasPromotionPrice(25) + SPECIAL.BENEFIT_PRICE),
+        },
+        {
+            orderMenus: `${CHRISTMAS_PASTA.NAME}-3,${MUSHROOM_SOUP.NAME}-1,${TAPAS.NAME}-1,${CHAMPAGNE.NAME}-1,${CAESAR_SALAD.NAME}-1`,
+            orderDate: 29,
+            expectedResult:
+                CHRISTMAS_PASTA.PRICE * 3 +
+                MUSHROOM_SOUP.PRICE +
+                TAPAS.PRICE +
+                CHAMPAGNE.PRICE +
+                CAESAR_SALAD.PRICE -
+                WEEKENDS.BENEFIT_PRICE * 3,
+        },
+    ])('할인 후 총금액 테스트', (input) => {
+        const { orderMenus, orderDate, expectedResult } = input;
+        const planner = makePlanner(orderMenus, orderDate);
+        expect(planner.getTotalPriceWithDiscount()).toBe(expectedResult);
     });
 });
