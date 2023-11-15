@@ -1,55 +1,119 @@
-import Planner from '../src/Planner';
-import { CATEGORIES, LIMIT_ORDER_COUNT, MENUS, REGEX } from '../src/constant.js';
+import { MENUS, PROMOTIONS } from '../src/constant/index.js';
+import { calculateChristmasPromotionPrice, getPromotionsByOrderDate, makePlanner } from './test.js';
 
-const callValidate = (input, validate) => validate(input);
+const { CHRISTMAS, WEEKENDS, WEEKDAYS, SPECIAL, GIFT } = PROMOTIONS;
+
+const {
+    T_BONE_STEAK,
+    COKE_ZERO,
+    RED_WINE,
+    ICE_CREAM,
+    CHOCOLATE_CAKE,
+    BARBECUE_RIB,
+    SEAFOOD_PASTA,
+    CHRISTMAS_PASTA,
+    MUSHROOM_SOUP,
+    TAPAS,
+    CHAMPAGNE,
+    CAESAR_SALAD,
+} = MENUS;
+
 describe('Planner 테스트', () => {
-    const planner = new Planner(MENUS, LIMIT_ORDER_COUNT);
+    describe('날짜에 따른 이벤트 존재 여부 테스트', () => {
+        describe('크리스마스 이벤트', () => {
+            test.each(CHRISTMAS.TARGET_DATES)('존재', (input) => {
+                const promotionsForDate = getPromotionsByOrderDate(input);
 
-    describe('예약 날짜 테스트', () => {
-        const dateValidators = (input) => [() => Planner.validateDayFormat(input, REGEX.DAY_FORMAT)];
-        test('유효한 날짜', () => {
-            for (let input = 1; input <= 31; input++) {
-                expect(() => callValidate(input, (input) => planner.validate(dateValidators(input)))).not.toThrow();
-            }
+                const promotions = promotionsForDate.filter((promotion) => promotion.EVENT === CHRISTMAS.EVENT);
+                expect(promotions.length).toBe(1);
+            });
+            test.each([26, 27, 28, 29, 30, 31])('미존재', (input) => {
+                const promotionsForDate = getPromotionsByOrderDate(input);
+
+                const promotions = promotionsForDate.filter((promotion) => promotion.EVENT === CHRISTMAS.EVENT);
+                expect(promotions.length).toBe(0);
+            });
         });
-        test.each([[0], [32], ['-1'], [''], ['a'], ['1a'], ['a1']])('유효하지 않은 날짜', (input) => {
-            expect(() => callValidate(input, (input) => planner.validate(dateValidators(input)))).toThrow();
+        describe('주말 이벤트', () => {
+            test.each(WEEKENDS.TARGET_DATES)('존재', (input) => {
+                const promotionsForDate = getPromotionsByOrderDate(input);
+
+                const promotions = promotionsForDate.filter((promotion) => promotion.EVENT === WEEKENDS.EVENT);
+                expect(promotions.length).toBe(1);
+            });
+            test.each(WEEKDAYS.TARGET_DATES)('미존재', (input) => {
+                const promotionsForDate = getPromotionsByOrderDate(input);
+
+                const promotions = promotionsForDate.filter((promotion) => promotion.EVENT === WEEKENDS.EVENT);
+                expect(promotions.length).toBe(0);
+            });
+        });
+        describe('평일 이벤트', () => {
+            test.each(WEEKDAYS.TARGET_DATES)('존재', (input) => {
+                const promotionsForDate = getPromotionsByOrderDate(input);
+
+                const promotions = promotionsForDate.filter((promotion) => promotion.EVENT === WEEKDAYS.EVENT);
+                expect(promotions.length).toBe(1);
+            });
+            test.each(WEEKENDS.TARGET_DATES)('미존재', (input) => {
+                const promotionsForDate = getPromotionsByOrderDate(input);
+
+                const promotions = promotionsForDate.filter((promotion) => promotion.EVENT === WEEKDAYS.EVENT);
+                expect(promotions.length).toBe(0);
+            });
+        });
+        test.each(SPECIAL.TARGET_DATES)('특별 이벤트 존재', (input) => {
+            const promotionsForDate = getPromotionsByOrderDate(input);
+
+            const promotions = promotionsForDate.filter((promotion) => promotion.EVENT === SPECIAL.EVENT);
+            expect(promotions.length).toBe(1);
+        });
+        test.each(GIFT.TARGET_DATES)('증정 이벤트 존재', (input) => {
+            const promotionsForDate = getPromotionsByOrderDate(input);
+
+            const promotions = promotionsForDate.filter((promotion) => promotion.EVENT === GIFT.EVENT);
+            expect(promotions.length).toBe(1);
         });
     });
 
-    describe('주문 테스트', () => {
-        const orderValidators = (input) => [
-            () => Planner.validateOrderFormat(input, REGEX.ORDER_FORMAT),
-            () => Planner.validateLimitOrderCount(input, LIMIT_ORDER_COUNT),
-            () => Planner.validateDuplicationOrder(input),
-            () => Planner.validateIncludeMenu(input, MENUS),
-            () => Planner.validateOrderOnlyOneCategory(input, MENUS, CATEGORIES.BEVERAGE),
-        ];
-        test.each([
-            ['티본스테이크-1'],
-            ['티본스테이크-1,제로콜라-1'],
-            ['티본스테이크-1,제로콜라-1,타파스-1'],
-            ['티본스테이크-1,제로콜라-1,타파스-1,레드와인-1'],
-            ['티본스테이크-10,타파스-10'],
-            ['티본스테이크-10,제로콜라-10'],
-        ])('주문이 유효할 때', (input) => {
-            expect(() => callValidate(input, (input) => planner.validate(orderValidators(input)))).not.toThrow();
-        });
-
-        test.each([
-            [''],
-            ['티본스테이크-1,'],
-            ['티본스테이크-0'],
-            ['티본스테이크-a'],
-            ['티본스테이크1'],
-            ['티본스테이크-1,티본스테이크-2'],
-            ['티본스테이크-1,과자-2,제로콜라-3,타파스-4'],
-            ['티본스테이크,제로콜라'],
-            ['티본스테이크-21'],
-            ['티본스테이크-15,제로콜라-6'],
-            ['제로콜라-1,레드와인-2'],
-        ])('주문이 유효하지 않을 때', (input) => {
-            expect(() => callValidate(input, (input) => planner.validate(orderValidators(input)))).toThrow();
-        });
+    test.each([
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-1,${COKE_ZERO.NAME}-1`,
+            orderDate: 1,
+            expectedResult: calculateChristmasPromotionPrice(1) + WEEKENDS.BENEFIT_PRICE,
+        },
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-1,${COKE_ZERO.NAME}-1,${BARBECUE_RIB.NAME}-1,${CHOCOLATE_CAKE.NAME}-2`,
+            orderDate: 3,
+            expectedResult:
+                calculateChristmasPromotionPrice(3) +
+                WEEKENDS.BENEFIT_PRICE * 2 +
+                SPECIAL.BENEFIT_PRICE +
+                GIFT.BENEFIT_PRICE,
+        },
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-2,${COKE_ZERO.NAME}-1,${SEAFOOD_PASTA.NAME}-1,${CHOCOLATE_CAKE.NAME}-2,${ICE_CREAM.NAME}-3`,
+            orderDate: 9,
+            expectedResult: calculateChristmasPromotionPrice(9) + WEEKENDS.BENEFIT_PRICE * 3 + GIFT.BENEFIT_PRICE,
+        },
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-1,${ICE_CREAM.NAME}-1,${CHOCOLATE_CAKE.NAME}-1`,
+            orderDate: 18,
+            expectedResult: calculateChristmasPromotionPrice(18) + WEEKDAYS.BENEFIT_PRICE * 2,
+        },
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-1,${COKE_ZERO.NAME}-1`,
+            orderDate: 25,
+            expectedResult: calculateChristmasPromotionPrice(25) + SPECIAL.BENEFIT_PRICE,
+        },
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-3,${COKE_ZERO.NAME}-1,${RED_WINE.NAME}-1,${ICE_CREAM.NAME}-1,${CHOCOLATE_CAKE.NAME}-1`,
+            orderDate: 29,
+            expectedResult: GIFT.BENEFIT_PRICE + WEEKENDS.BENEFIT_PRICE * 3,
+        },
+    ])('이벤트 혜택 총금액 테스트', (input) => {
+        const { orderMenus, orderDate, expectedResult } = input;
+        const planner = makePlanner(orderMenus, orderDate);
+        expect(planner.getTotalBenefitPrice()).toBe(expectedResult);
     });
 });

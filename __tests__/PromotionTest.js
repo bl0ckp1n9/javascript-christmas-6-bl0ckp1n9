@@ -2,6 +2,7 @@ import { MENUS, PROMOTIONS } from '../src/constant/index.js';
 import { Order } from '../src/model/index.js';
 import { fillArrayToDates } from '../src/util/index.js';
 import { Promotions } from '../src/model/Promotions.js';
+import { calculateChristmasPromotionPrice } from './test.js';
 
 const {
     T_BONE_STEAK,
@@ -18,18 +19,13 @@ const {
     CAESAR_SALAD,
 } = MENUS;
 
-const calculateChristmasPromotionPrice = (orderDate, rate) => {
-    const { BENEFIT_PRICE } = PROMOTIONS.CHRISTMAS;
-    return PROMOTIONS.CHRISTMAS.BENEFIT_PRICE + BENEFIT_PRICE * rate * (orderDate - 1);
-};
-
 describe('Promotion 테스트', () => {
     const [ChristmasPromotion, WeekendsPromotion, WeekdaysPromotion, SpecialPromotion, GiftPromotion] = Promotions;
 
     test.each(fillArrayToDates(25))('크리스마스 디데이 혜택 기능 테스트', (input) => {
         const order = new Order(MENUS, `${T_BONE_STEAK.NAME}-1`, input);
 
-        const expectedResult = calculateChristmasPromotionPrice(input, 0.1);
+        const expectedResult = calculateChristmasPromotionPrice(input);
         expect(ChristmasPromotion.getPromotionPrice(order)).toBe(expectedResult);
     });
 

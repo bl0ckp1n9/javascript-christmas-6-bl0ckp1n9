@@ -1,5 +1,5 @@
-import Order from '../src/Order.js';
-import { MENUS } from '../src/constant.js';
+import { MENUS } from '../src/constant/index.js';
+import { Order } from '../src/model/index.js';
 
 const {
     T_BONE_STEAK,
@@ -92,7 +92,6 @@ describe('Order 테스트', () => {
             totalPrice: CHAMPAGNE.PRICE * 3 + CAESAR_SALAD.PRICE * 2,
         },
     ])('주문한 메뉴 할인 전 전체 가격 계산', (input) => {
-        console.log(input);
         const order = new Order(MENUS, input.orderMenus, 3);
         expect(order.getTotalPrice()).toBe(input.totalPrice);
     });
