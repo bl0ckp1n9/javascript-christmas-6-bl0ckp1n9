@@ -44,7 +44,8 @@ class Planner {
     #applyPromotions(promotion) {
         const totalPriceWithoutDiscount = this.#order.getTotalPrice();
         if (totalPriceWithoutDiscount < 1_0000) return 0;
-        return PromotionFactory.calculatePromotionPrice(promotion, this.#order);
+        const promotionFactory = this.#calendar.getPromotionFactory();
+        return promotionFactory.calculatePromotionPrice(promotion, this.#order);
     }
 }
 

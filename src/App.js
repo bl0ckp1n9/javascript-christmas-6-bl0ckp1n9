@@ -18,7 +18,7 @@ class App {
         this.#orders = new Order(MENUS, order, orderDate);
         this.#planner = new Planner(
             this.#orders,
-            new PromotionCalendar(PROMOTION_YEAR, PROMOTION_MONTH, PromotionFactory.promotionList),
+            new PromotionCalendar(PROMOTION_YEAR, PROMOTION_MONTH, PromotionFactory),
         );
     }
 
