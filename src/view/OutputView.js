@@ -47,9 +47,11 @@ const OutputView = {
     },
     printOrderMenus(orders) {
         Console.print(ORDER_MENU_TITLE);
+
         orders.forEach((order) => {
             Console.print(MENU(order.name, order.count));
         });
+
         Console.print('');
     },
     printTotalPriceWithoutDiscount(totalPrice) {
@@ -59,13 +61,16 @@ const OutputView = {
     },
     printBenefitDetails(promotions) {
         Console.print(BENEFIT_DETAILS_TITLE);
+
         const printData = [];
+
         promotions.forEach((promotion) => {
             const { NAME, promotionBenefitPrice } = promotion;
             const isApplied = promotionBenefitPrice > 0;
             if (isApplied) printData.push(DISCOUNT(NAME, promotionBenefitPrice));
         });
         if (printData.length === 0) printData.push(NONE);
+
         Console.print(printData.join('\n'));
         Console.print('');
     },

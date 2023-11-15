@@ -15,10 +15,12 @@ class Order {
             () => Order.validateIncludeMenu(orderMenus, MENUS),
             () => Order.validateOrderOnlyOneCategory(orderMenus, MENUS, MENU_CATEGORIES.BEVERAGE),
         ];
+
         validators.forEach((validator) => validator());
     }
     static validateDate(date) {
         const validators = [() => Order.validateDayFormat(date, ORDER_REGEX.DAY_FORMAT)];
+
         validators.forEach((validator) => validator());
     }
     static validateOrderOnlyOneCategory(orderMenus, menus, category) {
@@ -97,6 +99,7 @@ class Order {
     }
     #setOrderMenus(orderMenus) {
         const { orderMenuNameList, orderMenuCountList } = Order.parseOrders(orderMenus);
+
         orderMenuNameList.forEach((menuName, index) => {
             const category = this.#getCategoryByMenuName(menuName);
             const key = this.#getKeyByMenuName(menuName);

@@ -19,10 +19,12 @@ class Planner {
                 promotionBenefitPrice: this.#applyPromotions(promotion),
             });
         });
+
         return activePromotions;
     }
     getTotalBenefitPrice() {
         const promotions = this.getPromotionsByOrderDate();
+
         return promotions.reduce((acc, cur) => acc + cur.promotionBenefitPrice, 0);
     }
     getTotalPriceWithDiscount() {
@@ -30,6 +32,7 @@ class Planner {
         const totalPrice = this.#order.getTotalPrice();
         const getTotalBenefitPrice = this.getTotalBenefitPrice();
         const giftPromotion = promotions.find((promotion) => promotion.EVENT === PROMOTION_CATEGORIES.GIFT);
+
         return totalPrice - (getTotalBenefitPrice - giftPromotion.promotionBenefitPrice);
     }
     getBadge() {
@@ -38,11 +41,13 @@ class Planner {
         if (totalBenefitPrice >= SANTA.PRICE) return SANTA.NAME;
         if (totalBenefitPrice >= TREE.PRICE) return TREE.NAME;
         if (totalBenefitPrice >= STAR.PRICE) return STAR.NAME;
+
         return NONE.NAME;
     }
     #applyPromotions(promotion) {
         const totalPriceWithoutDiscount = this.#order.getTotalPrice();
         if (totalPriceWithoutDiscount < PROMOTION_MINIMUM_PRICE) return 0;
+
         return promotion.getPromotionPrice(this.#order);
     }
 }

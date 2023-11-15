@@ -10,7 +10,6 @@ export const getWeekendsDates = (year, month) => {
         }
         startDate.setDate(startDate.getDate() + 1);
     }
-
     return weekends;
 };
 export const getWeekdaysDates = (year, month) => {
@@ -23,7 +22,6 @@ export const getWeekdaysDates = (year, month) => {
         }
         startDate.setDate(startDate.getDate() + 1);
     }
-
     return weekdays;
 };
 export const fillArrayToDates = (end) => [...Array(end)].map((v, i) => i + 1);
