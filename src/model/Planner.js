@@ -3,12 +3,10 @@ import { PROMOTION_CATEGORIES } from '../constant/index.js';
 class Planner {
     #order;
     #calendar;
-    #promotionFactory;
 
     constructor(order, calendar) {
         this.#order = order;
         this.#calendar = calendar;
-        this.#promotionFactory = this.#calendar.getPromotionFactory();
     }
 
     getPromotionsByOrderDate() {
@@ -16,10 +14,9 @@ class Planner {
         const activePromotions = [];
         promotions.forEach((promotion) => {
             const { CONFIG } = promotion;
-            const productInOrders = this.#order.getOrderMenuByCategory(CONFIG.PRODUCT);
             activePromotions.push({
                 ...CONFIG,
-                promotionBenefitPrice: this.#applyPromotions(promotion, productInOrders),
+                promotionBenefitPrice: this.#applyPromotions(promotion),
             });
         });
         return activePromotions;
@@ -45,8 +42,7 @@ class Planner {
     #applyPromotions(promotion) {
         const totalPriceWithoutDiscount = this.#order.getTotalPrice();
         if (totalPriceWithoutDiscount < 1_0000) return 0;
-        const promotionFactory = this.#calendar.getPromotionFactory();
-        return promotionFactory.calculatePromotionPrice(promotion, this.#order);
+        return promotion.getPromotionPrice(this.#order);
     }
 }
 
