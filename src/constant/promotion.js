@@ -1,0 +1,74 @@
+import { fillArrayToDates, getWeekdaysDates, getWeekendsDates } from '../util/date.js';
+import { MONTHS } from './date.js';
+import { MENU_CATEGORIES, MENUS } from './menu.js';
+
+export const PROMOTION_YEAR = 2023;
+export const PROMOTION_MONTH = MONTHS.DEC;
+
+export const PROMOTION_CATEGORIES = {
+    CHRISTMAS: 'CHRISTMAS',
+    WEEKENDS: 'WEEKENDS',
+    WEEKDAYS: 'WEEKDAYS',
+    SPECIAL: 'SPECIAL',
+    GIFT: 'GIFT',
+};
+
+export const PROMOTION_TYPES = {
+    DISCOUNT: 'DISCOUNT',
+    GIFT: 'GIFT',
+};
+
+export const PROMOTION_PRODUCTS = {
+    TOTAL: 'TOTAL',
+    DESSERT: MENU_CATEGORIES.DESSERT,
+    MAIN: MENU_CATEGORIES.MAIN,
+    CHAMPAGNE: MENUS.CHAMPAGNE,
+};
+
+export const PROMOTION_CONFIG = {
+    CHRISTMAS: {
+        NAME: '크리스마스 디데이',
+        EVENT: PROMOTION_CATEGORIES.CHRISTMAS,
+        TYPE: PROMOTION_TYPES.DISCOUNT,
+        PRODUCT: PROMOTION_PRODUCTS.TOTAL,
+        BENEFIT_PRICE: 1_000,
+        MINIMUM_PRICE: 0,
+        TARGET_DATES: fillArrayToDates(25),
+    },
+    WEEKENDS: {
+        NAME: '주말',
+        EVENT: PROMOTION_CATEGORIES.WEEKENDS,
+        TYPE: PROMOTION_TYPES.DISCOUNT,
+        PRODUCT: PROMOTION_PRODUCTS.MAIN,
+        BENEFIT_PRICE: 2_023,
+        MINIMUM_PRICE: 0,
+        TARGET_DATES: getWeekendsDates(PROMOTION_YEAR, PROMOTION_MONTH),
+    },
+    WEEKDAYS: {
+        NAME: '평일',
+        EVENT: PROMOTION_CATEGORIES.WEEKDAYS,
+        TYPE: PROMOTION_TYPES.DISCOUNT,
+        PRODUCT: PROMOTION_PRODUCTS.DESSERT,
+        BENEFIT_PRICE: 2_023,
+        MINIMUM_PRICE: 0,
+        TARGET_DATES: getWeekdaysDates(PROMOTION_YEAR, PROMOTION_MONTH),
+    },
+    SPECIAL: {
+        NAME: '특별',
+        EVENT: PROMOTION_CATEGORIES.SPECIAL,
+        TYPE: PROMOTION_TYPES.DISCOUNT,
+        PRODUCT: PROMOTION_PRODUCTS.TOTAL,
+        BENEFIT_PRICE: 1_000,
+        MINIMUM_PRICE: 0,
+        TARGET_DATES: [3, 10, 17, 24, 25, 31],
+    },
+    GIFT: {
+        NAME: '증정',
+        EVENT: PROMOTION_CATEGORIES.GIFT,
+        TYPE: PROMOTION_TYPES.GIFT,
+        PRODUCT: PROMOTION_PRODUCTS.CHAMPAGNE,
+        BENEFIT_PRICE: PROMOTION_PRODUCTS.CHAMPAGNE.PRICE,
+        MINIMUM_PRICE: 120_000,
+        TARGET_DATES: fillArrayToDates(31),
+    },
+};

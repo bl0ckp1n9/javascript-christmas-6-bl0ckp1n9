@@ -1,4 +1,4 @@
-import { PROMOTION_CATEGORIES } from './constant.js';
+import { PROMOTION_CATEGORIES } from '../constant/index.js';
 import PromotionFactory from './Promotion.js';
 
 class Planner {

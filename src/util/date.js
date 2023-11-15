@@ -1,4 +1,4 @@
-import { DAYS } from './constant.js';
+import { DAYS } from '../constant/date.js';
 
 export const getWeekendsDates = (year, month) => {
     const endDate = new Date(year, month, 0).getDate();

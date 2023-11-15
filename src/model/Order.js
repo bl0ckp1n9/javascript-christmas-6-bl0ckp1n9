@@ -1,5 +1,5 @@
-import { isDuplicate, isEveryInclude, isMoreThanLimit, isNotMatchRegex, isSomeNotInclude } from './validators.js';
-import { LIMIT_ORDER_COUNT, MENU_CATEGORIES, MENUS, REGEX } from './constant.js';
+import { isDuplicate, isEveryInclude, isMoreThanLimit, isNotMatchRegex, isSomeNotInclude } from '../util/index.js';
+import { LIMIT_ORDER_COUNT, MENU_CATEGORIES, MENUS, ORDER_REGEX } from '../constant/index.js';
 
 const ERROR_MESSAGE = Object.freeze({
     INVALID_DATE: '유효하지 않은 날짜입니다. 다시 입력해 주세요.',
@@ -10,7 +10,7 @@ class Order {
     static validateOrder(orderMenus) {
         const validators = [
             () => Order.validateDuplicationOrder(orderMenus),
-            () => Order.validateOrderMenuFormat(orderMenus, REGEX.ORDER_FORMAT),
+            () => Order.validateOrderMenuFormat(orderMenus, ORDER_REGEX.ORDER_FORMAT),
             () => Order.validateLimitOrderCount(orderMenus, LIMIT_ORDER_COUNT),
             () => Order.validateIncludeMenu(orderMenus, MENUS),
             () => Order.validateOrderOnlyOneCategory(orderMenus, MENUS, MENU_CATEGORIES.BEVERAGE),
@@ -18,7 +18,7 @@ class Order {
         validators.forEach((validator) => validator());
     }
     static validateDate(date) {
-        const validators = [() => Order.validateDayFormat(date, REGEX.DAY_FORMAT)];
+        const validators = [() => Order.validateDayFormat(date, ORDER_REGEX.DAY_FORMAT)];
         validators.forEach((validator) => validator());
     }
     static validateOrderOnlyOneCategory(orderMenus, menus, category) {

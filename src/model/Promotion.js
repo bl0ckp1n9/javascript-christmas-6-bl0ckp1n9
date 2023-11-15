@@ -1,4 +1,4 @@
-import { PROMOTION_CATEGORIES, PROMOTION_CONFIG } from './constant.js';
+import { PROMOTION_CATEGORIES, PROMOTION_CONFIG } from '../constant/index.js';
 
 const ChristPromotion = {
     CONFIG: PROMOTION_CONFIG.CHRISTMAS,

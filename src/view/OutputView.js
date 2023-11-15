@@ -1,5 +1,5 @@
 import { Console } from '@woowacourse/mission-utils';
-import { PROMOTION_CATEGORIES } from './constant.js';
+import { PROMOTION_CATEGORIES } from '../constant/index.js';
 
 const MESSAGE = {
     GREETINGS: '안녕하세요! 우테코 식당 12월 이벤트 플래너입니다.',
@@ -9,7 +9,7 @@ const MESSAGE = {
     BENEFIT_DETAILS_TITLE: '<혜택 내역>',
     TOTAL_PRICE_WITH_DISCOUNT_TITLE: '<할인 후 예상 결제 금액>',
     GIFT_TITLE: '<증정 메뉴>',
-    BENEFIT_TOTAL_PRICE_TITLE: '<총 혜택 금액>',
+    BENEFIT_TOTAL_PRICE_TITLE: '<총혜택 금액>',
     BADGE_TITLE: '<12월 이벤트 배지>',
     NONE: '없음',
     MENU: (name, count) => `${name} ${count}개`,

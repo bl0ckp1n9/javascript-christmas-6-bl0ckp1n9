@@ -1,12 +1,6 @@
-import InputView from './InputView.js';
-import OutputView from './OutputView.js';
-
-import Planner from './Planner.js';
-import Order from './Order.js';
-import PromotionCalendar from './PromotionCalendar.js';
-import PromotionFactory from './Promotion.js';
-
-import { MENUS, PROMOTION_CATEGORIES, PROMOTION_MONTH, PROMOTION_YEAR } from './constant.js';
+import { InputView, OutputView } from './view/index.js';
+import { MENUS, PROMOTION_MONTH, PROMOTION_YEAR } from './constant/index.js';
+import { Order, Planner, PromotionCalendar, PromotionFactory } from './model/index.js';
 
 class App {
     #planner;
