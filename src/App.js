@@ -1,6 +1,6 @@
 import { InputView, OutputView } from './view/index.js';
 import { MENUS, PROMOTION_MONTH, PROMOTION_YEAR } from './constant/index.js';
-import { Order, Planner, PromotionCalendar, Promotion } from './model/index.js';
+import { Order, Planner, PromotionCalendar, PromotionFactory } from './model/index.js';
 
 class App {
     #planner;
@@ -16,7 +16,10 @@ class App {
         const orderDate = await InputView.readOrderDate((input) => Order.validateDate(input));
         const order = await InputView.readOrderMenus((input) => Order.validateOrder(input));
         this.#orders = new Order(MENUS, order, orderDate);
-        this.#planner = new Planner(this.#orders, new PromotionCalendar(PROMOTION_YEAR, PROMOTION_MONTH, Promotion));
+        this.#planner = new Planner(
+            this.#orders,
+            new PromotionCalendar(PROMOTION_YEAR, PROMOTION_MONTH, PromotionFactory),
+        );
     }
 
     async preview() {

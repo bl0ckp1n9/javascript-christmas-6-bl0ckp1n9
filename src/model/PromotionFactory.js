@@ -37,11 +37,8 @@ const GiftPromotion = {
     },
 };
 
-const Promotion = {
+const PromotionFactory = {
     promotionList: [ChristPromotion, WeekendsPromotion, WeekdaysPromotion, SpecialPromotion, GiftPromotion],
-    getPromotion(promotionCategory) {
-        return this.promotionList.find((promotion) => promotion.CONFIG.EVENT === promotionCategory);
-    },
     calculatePromotionPrice(promotion, order) {
         const promotionCategory = promotion.CONFIG.EVENT;
         if (promotionCategory === PROMOTION_CATEGORIES.CHRISTMAS || promotionCategory === PROMOTION_CATEGORIES.SPECIAL)
@@ -58,4 +55,4 @@ const Promotion = {
     },
 };
 
-export default Promotion;
+export default PromotionFactory;

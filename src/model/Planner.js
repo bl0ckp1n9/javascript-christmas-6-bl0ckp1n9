@@ -3,12 +3,12 @@ import { PROMOTION_CATEGORIES } from '../constant/index.js';
 class Planner {
     #order;
     #calendar;
-    #promotion;
+    #promotionFactory;
 
     constructor(order, calendar) {
         this.#order = order;
         this.#calendar = calendar;
-        this.#promotion = this.#calendar.getPromotionFactory();
+        this.#promotionFactory = this.#calendar.getPromotionFactory();
     }
 
     getPromotionsByOrderDate() {
@@ -29,9 +29,10 @@ class Planner {
         return promotions.reduce((acc, cur) => acc + cur.promotionBenefitPrice, 0);
     }
     getTotalPriceWithDiscount() {
+        const promotions = this.getPromotionsByOrderDate();
         const totalPrice = this.#order.getTotalPrice();
         const getTotalBenefitPrice = this.getTotalBenefitPrice();
-        const giftPromotion = this.#promotion.getPromotion(PROMOTION_CATEGORIES.GIFT);
+        const giftPromotion = promotions.find((promotion) => promotion.EVENT === PROMOTION_CATEGORIES.GIFT);
         return totalPrice - (getTotalBenefitPrice - giftPromotion.promotionBenefitPrice);
     }
     getBadge() {
@@ -44,7 +45,8 @@ class Planner {
     #applyPromotions(promotion) {
         const totalPriceWithoutDiscount = this.#order.getTotalPrice();
         if (totalPriceWithoutDiscount < 1_0000) return 0;
-        return this.#promotion.calculatePromotionPrice(promotion, this.#order);
+        const promotionFactory = this.#calendar.getPromotionFactory();
+        return promotionFactory.calculatePromotionPrice(promotion, this.#order);
     }
 }
 
