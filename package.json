@@ -26,7 +26,8 @@
   "jest": {
     "transform": {
       "\\.js$": "babel-jest"
-    }
+    },
+    "testPathIgnorePatterns": ["__tests__/test.js"]
   },
   "babel": {
     "presets": [
