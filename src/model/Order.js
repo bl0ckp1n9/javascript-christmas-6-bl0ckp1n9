@@ -5,7 +5,9 @@ const ERROR_MESSAGE = Object.freeze({
     INVALID_DATE: '유효하지 않은 날짜입니다. 다시 입력해 주세요.',
     IS_INVALID_ORDER: '유효하지 않은 주문입니다. 다시 입력해 주세요.',
 });
+
 const { INVALID_DATE, IS_INVALID_ORDER } = ERROR_MESSAGE;
+
 class Order {
     static validateOrder(orderMenus) {
         const validators = [
