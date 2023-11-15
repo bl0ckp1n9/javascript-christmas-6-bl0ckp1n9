@@ -2,14 +2,14 @@ class PromotionCalendar {
     #calendar = new Map();
     #endDate;
     #startDate;
-    #promotionFactory;
+    #promotion;
 
-    constructor(year, month, promotionFactory) {
+    constructor(year, month, promotion) {
         const promotionDate = new Date(year, month, 0);
         this.#endDate = new Date(year, month, promotionDate.getDate());
         this.#startDate = new Date(year, month, 1);
-        this.#promotionFactory = promotionFactory;
-        this.#setPromotionsToCalendar(this.#promotionFactory.promotionList);
+        this.#promotion = promotion;
+        this.#setPromotionsToCalendar(this.#promotion.promotionList);
     }
 
     getPromotionsByDate(date) {
@@ -17,7 +17,7 @@ class PromotionCalendar {
     }
 
     getPromotionFactory() {
-        return this.#promotionFactory;
+        return this.#promotion;
     }
     #setPromotionToCalendar(date, event) {
         const eventList = this.#calendar.get(date);

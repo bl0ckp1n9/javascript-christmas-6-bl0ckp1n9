@@ -37,7 +37,7 @@ const GiftPromotion = {
     },
 };
 
-const PromotionFactory = {
+const Promotion = {
     promotionList: [ChristPromotion, WeekendsPromotion, WeekdaysPromotion, SpecialPromotion, GiftPromotion],
     getPromotion(promotionCategory) {
         return this.promotionList.find((promotion) => promotion.CONFIG.EVENT === promotionCategory);
@@ -58,4 +58,4 @@ const PromotionFactory = {
     },
 };
 
-export default PromotionFactory;
+export default Promotion;
