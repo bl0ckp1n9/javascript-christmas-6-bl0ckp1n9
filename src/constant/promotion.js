@@ -2,6 +2,26 @@ import { fillArrayToDates, getWeekdaysDates, getWeekendsDates } from '../util/da
 import { MONTHS } from './date.js';
 import { MENU_CATEGORIES, MENUS } from './menu.js';
 
+export const BADGE = {
+    SANTA: {
+        NAME: '산타',
+        PRICE: 20_000,
+    },
+    TREE: {
+        NAME: '트리',
+        PRICE: 10_000,
+    },
+    STAR: {
+        NAME: '별',
+        PRICE: 5_000,
+    },
+    NONE: {
+        NAME: '없음',
+        PRICE: 0,
+    },
+};
+
+export const PROMOTION_MINIMUM_PRICE = 10_000;
 export const PROMOTION_YEAR = 2023;
 export const PROMOTION_MONTH = MONTHS.DEC;
 
@@ -20,7 +40,7 @@ export const PROMOTION_PRODUCTS = {
     CHAMPAGNE: MENUS.CHAMPAGNE,
 };
 
-export const PROMOTION_CONFIG = {
+export const PROMOTIONS = {
     CHRISTMAS: {
         NAME: '크리스마스 디데이',
         EVENT: PROMOTION_CATEGORIES.CHRISTMAS,

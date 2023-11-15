@@ -1,7 +1,7 @@
-import { PROMOTION_CONFIG } from '../constant/index.js';
+import { PROMOTIONS } from '../constant/index.js';
 
 const ChristPromotion = {
-    CONFIG: PROMOTION_CONFIG.CHRISTMAS,
+    CONFIG: PROMOTIONS.CHRISTMAS,
     getPromotionPrice(order) {
         const date = order.getOrderDate();
         return this.CONFIG.BENEFIT_PRICE + this.CONFIG.BENEFIT_PRICE * 0.1 * (date - 1);
@@ -9,7 +9,7 @@ const ChristPromotion = {
 };
 
 const WeekendsPromotion = {
-    CONFIG: PROMOTION_CONFIG.WEEKENDS,
+    CONFIG: PROMOTIONS.WEEKENDS,
     getPromotionPrice(order) {
         const productInOrder = order.getOrderMenuByCategory(this.CONFIG.PRODUCT);
         const menuCount = productInOrder.reduce((acc, cur) => acc + Number(cur.count), 0);
@@ -17,7 +17,7 @@ const WeekendsPromotion = {
     },
 };
 const WeekdaysPromotion = {
-    CONFIG: PROMOTION_CONFIG.WEEKDAYS,
+    CONFIG: PROMOTIONS.WEEKDAYS,
     getPromotionPrice(order) {
         const productInOrder = order.getOrderMenuByCategory(this.CONFIG.PRODUCT);
         const menuCount = productInOrder.reduce((acc, cur) => acc + Number(cur.count), 0);
@@ -26,14 +26,14 @@ const WeekdaysPromotion = {
 };
 
 const SpecialPromotion = {
-    CONFIG: PROMOTION_CONFIG.SPECIAL,
+    CONFIG: PROMOTIONS.SPECIAL,
     getPromotionPrice() {
         return this.CONFIG.BENEFIT_PRICE;
     },
 };
 
 const GiftPromotion = {
-    CONFIG: PROMOTION_CONFIG.GIFT,
+    CONFIG: PROMOTIONS.GIFT,
     getPromotionPrice(order) {
         const preDiscountAmount = order.getTotalPrice();
         if (preDiscountAmount < this.CONFIG.MINIMUM_PRICE) return 0;

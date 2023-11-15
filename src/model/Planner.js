@@ -1,4 +1,4 @@
-import { PROMOTION_CATEGORIES } from '../constant/index.js';
+import { BADGE, PROMOTION_CATEGORIES, PROMOTION_MINIMUM_PRICE } from '../constant/index.js';
 
 class Planner {
     #order;
@@ -33,15 +33,16 @@ class Planner {
         return totalPrice - (getTotalBenefitPrice - giftPromotion.promotionBenefitPrice);
     }
     getBadge() {
+        const { SANTA, TREE, STAR, NONE } = BADGE;
         const totalBenefitPrice = this.getTotalBenefitPrice();
-        if (totalBenefitPrice >= 20_000) return '산타';
-        if (totalBenefitPrice >= 10_000) return '트리';
-        if (totalBenefitPrice >= 5_000) return '벨';
-        return '없음';
+        if (totalBenefitPrice >= SANTA.PRICE) return SANTA.NAME;
+        if (totalBenefitPrice >= TREE.PRICE) return TREE.NAME;
+        if (totalBenefitPrice >= STAR.PRICE) return STAR.NAME;
+        return NONE.NAME;
     }
     #applyPromotions(promotion) {
         const totalPriceWithoutDiscount = this.#order.getTotalPrice();
-        if (totalPriceWithoutDiscount < 1_0000) return 0;
+        if (totalPriceWithoutDiscount < PROMOTION_MINIMUM_PRICE) return 0;
         return promotion.getPromotionPrice(this.#order);
     }
 }

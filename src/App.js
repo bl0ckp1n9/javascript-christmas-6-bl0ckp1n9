@@ -3,29 +3,32 @@ import { MENUS, PROMOTION_MONTH, PROMOTION_YEAR } from './constant/index.js';
 import { Order, Planner, PromotionCalendar, Promotions } from './model/index.js';
 
 class App {
-    #planner;
-    #orders;
     async run() {
         OutputView.printGreetings();
-        await this.reserve();
+        const { order, planner } = await this.reserve();
         OutputView.printPreviewMessage();
-        await this.preview();
+        await this.preview(order, planner);
     }
 
     async reserve() {
         const orderDate = await InputView.readOrderDate((input) => Order.validateDate(input));
-        const order = await InputView.readOrderMenus((input) => Order.validateOrder(input));
-        this.#orders = new Order(MENUS, order, orderDate);
-        this.#planner = new Planner(this.#orders, new PromotionCalendar(PROMOTION_YEAR, PROMOTION_MONTH, Promotions));
+        const orderMenu = await InputView.readOrderMenus((input) => Order.validateOrder(input));
+        const order = new Order(MENUS, orderMenu, orderDate);
+        const planner = new Planner(order, new PromotionCalendar(PROMOTION_YEAR, PROMOTION_MONTH, Promotions));
+
+        return {
+            order,
+            planner,
+        };
     }
 
-    async preview() {
-        const orderMenuList = this.#orders.getOrderMenuList();
-        const totalPriceWithoutDiscount = this.#orders.getTotalPrice();
-        const promotions = this.#planner.getPromotionsByOrderDate();
-        const totalBenefitPrice = this.#planner.getTotalBenefitPrice();
-        const totalPriceWithDiscount = this.#planner.getTotalPriceWithDiscount();
-        const badge = this.#planner.getBadge();
+    async preview(order, planner) {
+        const orderMenuList = order.getOrderMenuList();
+        const totalPriceWithoutDiscount = order.getTotalPrice();
+        const promotions = planner.getPromotionsByOrderDate();
+        const totalBenefitPrice = planner.getTotalBenefitPrice();
+        const totalPriceWithDiscount = planner.getTotalPriceWithDiscount();
+        const badge = planner.getBadge();
         OutputView.printOrderMenus(orderMenuList);
         OutputView.printTotalPriceWithoutDiscount(totalPriceWithoutDiscount);
         OutputView.printGiveWayMenu(promotions);
