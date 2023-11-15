@@ -1,4 +1,4 @@
-import { MENUS, PROMOTIONS } from '../src/constant/index.js';
+import { BADGE, MENUS, PROMOTIONS } from '../src/constant/index.js';
 import { calculateChristmasPromotionPrice, getPromotionsByOrderDate, makePlanner } from './utils.js';
 
 const { CHRISTMAS, WEEKENDS, WEEKDAYS, SPECIAL, GIFT } = PROMOTIONS;
@@ -175,5 +175,32 @@ describe('Planner 테스트', () => {
         const { orderMenus, orderDate, expectedResult } = input;
         const planner = makePlanner(orderMenus, orderDate);
         expect(planner.getTotalPriceWithDiscount()).toBe(expectedResult);
+    });
+
+    test.each([
+        {
+            orderMenus: `${T_BONE_STEAK.NAME}-3`,
+            orderDate: 1,
+            expectedResult: BADGE.SANTA.NAME,
+        },
+        {
+            orderMenus: `${ICE_CREAM.NAME}-5`,
+            orderDate: 4,
+            expectedResult: BADGE.TREE.NAME,
+        },
+        {
+            orderMenus: `${SEAFOOD_PASTA.NAME}-3`,
+            orderDate: 29,
+            expectedResult: BADGE.STAR.NAME,
+        },
+        {
+            orderMenus: `${TAPAS.NAME}-1,${COKE_ZERO.NAME}-1`,
+            orderDate: 26,
+            expectedResult: BADGE.NONE.NAME,
+        },
+    ])('뱃지 테스트', (input) => {
+        const { orderMenus, orderDate, expectedResult } = input;
+        const planner = makePlanner(orderMenus, orderDate);
+        expect(planner.getBadge()).toBe(expectedResult);
     });
 });
