@@ -12,7 +12,9 @@ class App {
     #planner;
     #orders;
     async run() {
+        OutputView.printGreetings();
         await this.reserve();
+        OutputView.printPreviewMessage();
         await this.preview();
     }
 
